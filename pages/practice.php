@@ -6,7 +6,7 @@ include '../config/koneksi.php';
 // PROTEKSI KEAMANAN: Cek apakah user sudah login
 // ========================================================
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /aplikasi_skripsi/pages/loginpage.html');
+    header('Location: /pages/loginpage.html');
     exit;
 }
 
@@ -77,12 +77,12 @@ if (mysqli_num_rows($q_done) > 0) {
 }
 
 // JSON Encode untuk diproses di Frontend
-$json_readingData = json_encode($readingData);
-$json_completed = json_encode($completed_ids); 
-$json_topics = json_encode($all_topics);
-$json_completed_levels = json_encode($completed_per_level);
-$json_q_counts = json_encode($question_counts);
-$json_user_scores = json_encode($user_scores);
+$json_readingData = json_encode($readingData, JSON_INVALID_UTF8_SUBSTITUTE) ?: '[]';
+$json_completed = json_encode($completed_ids, JSON_INVALID_UTF8_SUBSTITUTE) ?: '[]'; 
+$json_topics = json_encode($all_topics, JSON_INVALID_UTF8_SUBSTITUTE) ?: '{}';
+$json_completed_levels = json_encode($completed_per_level, JSON_INVALID_UTF8_SUBSTITUTE) ?: '{}';
+$json_q_counts = json_encode($question_counts, JSON_INVALID_UTF8_SUBSTITUTE) ?: '{}';
+$json_user_scores = json_encode($user_scores, JSON_INVALID_UTF8_SUBSTITUTE) ?: '{}';
 ?>
 
 <!doctype html>
@@ -91,6 +91,9 @@ $json_user_scores = json_encode($user_scores);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Practice | ReadQuest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../desain/practice.css?v=<?= time(); ?>" />
     <style>
@@ -112,9 +115,10 @@ $json_user_scores = json_encode($user_scores);
   </head>
   <body>
     <div class="app-container">
-      <aside class="sidebar">
-        <div class="sidebar-section">
-          <p class="section-title">Level</p>
+      <aside class="sidebar" id="practice-sidebar">
+        <div class="sidebar-section" style="display: flex; justify-content: space-between; align-items: center;">
+          <p class="section-title" style="margin: 0;">Level</p>
+          <span class="material-symbols-outlined mobile-sidebar-toggle" style="display: none; cursor: pointer; color: #94a3b8;" onclick="togglePracticeSidebar()">close</span>
         </div>
 
         <div class="sidebar-menu" id="sidebar-menu"></div>
@@ -130,6 +134,17 @@ $json_user_scores = json_encode($user_scores);
         <div id="dynamic-content" class="reading-content active">
           
           <div class="content-header">
+            <div class="mobile-top-actions" style="display: none; flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 20px;">
+                <div class="mobile-sidebar-toggle" style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #a3e635; font-weight: bold; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; background: #1e293b;" onclick="togglePracticeSidebar()">
+                    <span class="material-symbols-outlined">menu</span> Select Level
+                </div>
+                <button id="mobile-back-home-btn" onclick="goBack()" class="back-btn" style="padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: none; color: white;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Home
+                </button>
+                <button id="mobile-back-topics-btn" onclick="backToTopicView()" class="back-btn" style="display: none; padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: none; color: white;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Topics
+                </button>
+            </div>
             <div id="header-text-area"></div>
           </div>
 
@@ -292,6 +307,18 @@ $json_user_scores = json_encode($user_scores);
       function changeTopic(levelId) {
         currentLevel = levelId;
         
+        // Tampilkan tombol back home mobile saat di level view
+        const mobileBackBtn = document.getElementById("mobile-back-home-btn");
+        const mobileBackTopicsBtn = document.getElementById("mobile-back-topics-btn");
+        if (mobileBackBtn) mobileBackBtn.style.display = "flex";
+        if (mobileBackTopicsBtn) mobileBackTopicsBtn.style.display = "none";
+        
+        // Tutup sidebar jika diakses dari mobile
+        const sidebar = document.getElementById("practice-sidebar");
+        if (sidebar && sidebar.classList.contains("show")) {
+            sidebar.classList.remove("show");
+        }
+        
         // Update active class
         document.querySelectorAll(".topic-btn:not(.locked)").forEach((btn) => btn.classList.remove("active"));
         const activeBtn = document.getElementById("btn-" + levelId);
@@ -333,13 +360,19 @@ $json_user_scores = json_encode($user_scores);
       function openTopicArticles(topicName) {
         currentTopic = topicName;
 
+        // Toggle button back di mobile
+        const mobileBackBtn = document.getElementById("mobile-back-home-btn");
+        const mobileBackTopicsBtn = document.getElementById("mobile-back-topics-btn");
+        if (mobileBackBtn) mobileBackBtn.style.display = "none";
+        if (mobileBackTopicsBtn) mobileBackTopicsBtn.style.display = "flex";
+
         document.getElementById("topic-view").style.display = "none";
         document.getElementById("article-view").style.display = "block";
 
         const headerArea = document.getElementById("header-text-area");
         headerArea.innerHTML = `
-            <button onclick="backToTopicView()" style="background-color: #3b82f6; color: #ffffff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#3b82f6'">
-                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Topics List
+            <button id="desktop-back-topics-btn" onclick="backToTopicView()" style="background-color: #3b82f6; color: #ffffff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#2563eb'" onmouseout="this.style.backgroundColor='#3b82f6'">
+                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Topics
             </button>
             <h2 style="display:flex; align-items:center;">Topic: ${topicName} <span class="header-meta" style="margin-left:10px;">(Level ${currentLevel})</span></h2>
         `;
@@ -445,8 +478,15 @@ $json_user_scores = json_encode($user_scores);
         window.location.href = `reading-detail.php?id=${id}`;
       }
 
+      function togglePracticeSidebar() {
+          const sidebar = document.getElementById("practice-sidebar");
+          if(sidebar) {
+              sidebar.classList.toggle("show");
+          }
+      }
+
       function goBack() {
-        window.location.href = "dashboard.php";
+          window.location.href = "dashboard.php";
       }
 
       function showLockedModal(message) {

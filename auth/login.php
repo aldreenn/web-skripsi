@@ -1,10 +1,10 @@
 <?php
-// Konfigurasi database untuk XAMPP (MySQL/MariaDB)
-$dbHost = '127.0.0.1';
-$dbPort = 3306;               // default MySQL port di XAMPP
-$dbUser = 'root';             // ganti sesuai akun DB Anda
-$dbPass = '';                 // isi jika ada password root
-$dbName = 'aplikasi_skripsi';    // ganti dengan nama database Anda
+// Konfigurasi database - sesuaikan dengan kredensial InfinityFree
+$dbHost = 'sql304.infinityfree.com';
+$dbPort = 3306;
+$dbUser = 'if0_42484122';
+$dbPass = 'unpredicted11';
+$dbName = 'if0_42484122_readquest';
 
 // Nama tabel dan kolom (ubah sesuai skema Anda)
 $tableName    = 'users';
@@ -20,7 +20,7 @@ foreach ([$tableName, $usernameCol, $passwordCol] as $identifier) {
 }
 
 // Helper untuk kirim pesan error lewat query string dan tetap di loginpage
-function redirectWithError(string $message, int $statusCode = 400, string $redirect = '/aplikasi_skripsi/pages/loginpage.html'): void
+function redirectWithError(string $message, int $statusCode = 400, string $redirect = '/pages/loginpage.html'): void
 {
     http_response_code($statusCode);
     $encodedMessage = urlencode($message);
@@ -102,7 +102,7 @@ header('Expires: 0');
 if ($userRow['role'] === 'admin') {
     header('Location: ../admin_pages/admin_dashboard.php?page=overview');
 } else {
-    header('Location: /aplikasi_skripsi/pages/dashboard.php#home');
+    header('Location: ../pages/dashboard.php');
 }
 exit;
 ?>

@@ -1,2 +1,34 @@
 Options -Indexes
-ErrorDocument 403 /aplikasi_skripsi/403.php
+ErrorDocument 403 /403.php
+
+RewriteEngine On
+
+# 1. Hapus /index.php menjadi /
+RewriteCond %{THE_REQUEST} /index\.php[?\s]
+RewriteCond %{REQUEST_METHOD} GET
+RewriteCond %{REQUEST_URI} ^(.*)/index\.php$
+RewriteRule ^ %1/ [R=301,L]
+
+# 2. Hapus akhiran .php dari URL (Redirect 301)
+RewriteCond %{THE_REQUEST} \.php[?\s]
+RewriteCond %{REQUEST_METHOD} GET
+RewriteCond %{REQUEST_URI} ^(.*)\.php$
+RewriteRule ^ %1 [R=301,L]
+
+# 3. Hapus akhiran .html dari URL (Redirect 301)
+RewriteCond %{THE_REQUEST} \.html[?\s]
+RewriteCond %{REQUEST_METHOD} GET
+RewriteCond %{REQUEST_URI} ^(.*)\.html$
+RewriteRule ^ %1 [R=301,L]
+
+# 4. Baca file tanpa ekstensi sebagai file .php (jika filenya ada)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# 5. Baca file tanpa ekstensi sebagai file .html (jika filenya ada)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]

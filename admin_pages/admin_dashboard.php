@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     // Khusus ini biarkan alert bawaan karena header/footer belum dimuat saat login gagal
     echo "<script>
             alert('Akses Ditolak! Halaman ini khusus untuk Admin.');
-            window.location.href = '/aplikasi_skripsi/pages/loginpage.html';
+            window.location.href = '/pages/loginpage.html';
           </script>";
     exit;
 }

@@ -1,9 +1,12 @@
 <?php
-// Konfigurasi Database (Default bawaan XAMPP)
-$host = "localhost";
-$user = "root";       // Username default phpMyAdmin adalah root
-$pass = "";           // Password default phpMyAdmin biasanya kosong
-$db   = "aplikasi_skripsi"; // Nama database yang sudah Anda buat
+// ================================================================
+// KONFIGURASI DATABASE - InfinityFree
+// Ganti nilai di bawah ini dengan kredensial dari panel InfinityFree
+// ================================================================
+$host = 'sql304.infinityfree.com';
+$user = 'if0_42484122';
+$pass = 'unpredicted11'; // ← isi password hosting Anda
+$db   = 'if0_42484122_readquest';
 
 // Membuat koneksi ke database
 $conn = mysqli_connect($host, $user, $pass, $db);

@@ -4,7 +4,7 @@ include '../config/koneksi.php';
 
 // Pastikan user login
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /aplikasi_skripsi/pages/loginpage.html');
+    header('Location: /pages/loginpage.html');
     exit;
 }
 

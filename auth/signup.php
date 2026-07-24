@@ -1,15 +1,15 @@
 <?php
-// Konfigurasi database
-$dbHost = '127.0.0.1';
+// Konfigurasi database - sesuaikan dengan kredensial InfinityFree
+$dbHost = 'sql304.infinityfree.com';
 $dbPort = 3306;
-$dbUser = 'root';
-$dbPass = '';
-$dbName = 'aplikasi_skripsi';
+$dbUser = 'if0_42484122';
+$dbPass = 'unpredicted11';
+$dbName = 'if0_42484122_readquest';
 
 $tableName   = 'users';
 
 // Helper untuk kirim pesan error dan kembali ke halaman signup
-function redirectWithError(string $message, int $statusCode = 400, string $redirect = '/aplikasi_skripsi/pages/signup.html'): void
+function redirectWithError(string $message, int $statusCode = 400, string $redirect = '/pages/signup.html'): void
 {
     http_response_code($statusCode);
     $encodedMessage = urlencode($message);
@@ -85,5 +85,5 @@ if (!$ok) {
 }
 
 // Jika sukses, redirect ke halaman login
-header('Location: /aplikasi_skripsi/pages/loginpage.html');
+header('Location: ../pages/loginpage.html');
 exit;

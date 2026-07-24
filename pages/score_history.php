@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /aplikasi_skripsi/pages/loginpage.html');
+    header('Location: /pages/loginpage.html');
     exit;
 }
 
@@ -57,19 +57,19 @@ $result_test = $stmt_test->get_result();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> Score History | ReadQuest</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link rel="stylesheet" href="/aplikasi_skripsi/desain/dashboard.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="/aplikasi_skripsi/desain/score_history.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="/desain/dashboard.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="/desain/score_history.css?v=<?= time(); ?>">
 </head>
 <body>
   <nav class="navbar" aria-label="Primary">
     <div class="navbar-left">
-      <a href="/aplikasi_skripsi/pages/dashboard.php#home" class="navbar-logo">ReadQuest</a>
+      <a href="/pages/dashboard.php#home" class="navbar-logo">ReadQuest</a>
     </div>
     <ul class="navbar-center navbar-links">
-      <li><a href="/aplikasi_skripsi/pages/dashboard.php#home">Home</a></li>
-      <li><a href="/aplikasi_skripsi/pages/practice.php">Practice</a></li>
-      <li><a href="/aplikasi_skripsi/pages/test.php">Test</a></li>
-      <li><a href="/aplikasi_skripsi/pages/dashboard.php#leaderboard">Leaderboard</a></li>
+      <li><a href="/pages/dashboard.php#home">Home</a></li>
+      <li><a href="/pages/practice.php">Practice</a></li>
+      <li><a href="/pages/test.php">Test</a></li>
+      <li><a href="/pages/dashboard.php#leaderboard">Leaderboard</a></li>
     </ul>
     <div class="navbar-right">
       <div class="profile-dropdown">
@@ -81,11 +81,11 @@ $result_test = $stmt_test->get_result();
           <div class="dropdown-header">
             <span class="user-name-drop"><?php echo $full_name; ?></span>
           </div>
-          <a href="/aplikasi_skripsi/pages/manage_account.php">
+          <a href="/pages/manage_account.php">
               <span class="material-symbols-outlined">settings</span> Manage Account
           </a>
           <div class="dropdown-divider"></div>
-          <a href="/aplikasi_skripsi/auth/logout.php" class="logout-text">
+          <a href="/auth/logout.php" class="logout-text">
               <span class="material-symbols-outlined">logout</span> Log Out
           </a>
         </div>
@@ -98,7 +98,7 @@ $result_test = $stmt_test->get_result();
     <div class="dashboard-container">
         
         <div style="margin-bottom: 20px;">
-            <a href="/aplikasi_skripsi/pages/dashboard.php#home" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; width: fit-content;">
+            <a href="/pages/dashboard.php#home" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; width: fit-content;">
                 <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Home
             </a>
         </div>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /aplikasi_skripsi/pages/loginpage.html');
+    header('Location: /pages/loginpage.html');
     exit;
 }
 // Cegah cache untuk mencegah back setelah logout
@@ -318,8 +318,11 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | ReadQuest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="/aplikasi_skripsi/desain/dashboard.css?v=<?= time(); ?>">
+    <link rel="stylesheet" href="../desain/dashboard.css?v=<?= time(); ?>">
     <style>
         .panel-tabs span { cursor: pointer; transition: color 0.2s; }
         .panel-tabs span:hover { color: #ffffff; }
@@ -328,13 +331,14 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
 <body>
     <nav class="navbar" aria-label="Primary">
         <div class="navbar-left">
+            <span class="material-symbols-outlined mobile-menu-btn" onclick="toggleMobileMenu()" style="display: none; cursor: pointer; margin-right: 15px; font-size: 28px; user-select: none;">menu</span>
             <a href="#home" class="navbar-logo" onclick="switchPage('home')">ReadQuest</a>
         </div>
 
         <ul class="navbar-center navbar-links">
             <li><a href="#home" onclick="switchPage('home')">Home</a></li>
-            <li><a href="/aplikasi_skripsi/pages/practice.php">Practice</a></li>
-            <li><a href="/aplikasi_skripsi/pages/test.php">Test</a></li>
+            <li><a href="/pages/practice.php">Practice</a></li>
+            <li><a href="/pages/test.php">Test</a></li>
             <li><a href="#leaderboard" onclick="switchPage('leaderboard')">Leaderboard</a></li>
         </ul>
 
@@ -354,11 +358,11 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                         </div>
                         <?php endif; ?>
                     </div>
-                    <a href="/aplikasi_skripsi/pages/manage_account.php">
+                    <a href="/pages/manage_account.php">
                         <span class="material-symbols-outlined">settings</span> Manage Account
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a href="/aplikasi_skripsi/auth/logout.php" class="logout-text">
+                    <a href="/auth/logout.php" class="logout-text">
                         <span class="material-symbols-outlined">logout</span> Log Out
                     </a>
                 </div>
@@ -373,7 +377,7 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                     <h2 style="color:#a3e635">Hey <?php echo $greeting_name; ?>!</h2>
                     <p>Keep collecting XP and monitor your Practice and Test progress here.</p>
                 </div>
-                <a href="/aplikasi_skripsi/pages/practice.php?lvl=<?= htmlspecialchars($recommended_level ?? 'A1') ?>" class="btn-primary">Continue Learning</a>
+                <a href="/pages/practice.php?lvl=<?= htmlspecialchars($recommended_level ?? 'A1') ?>" class="btn-primary">Continue Learning</a>
             </div>
 
             <div class="dash-grid">
@@ -394,12 +398,12 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
     
                             <?php if (!empty($active_level_topics)): ?>
 
-                                <div style="padding-bottom: 15px; margin-bottom: 25px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <p style="color: #a3e635; margin: 0 0 5px 0; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Current Level</p>
-                                        <h2 id="display-active-level" style="color: #f8fafc; margin: 0;">Level <?= htmlspecialchars($active_level) ?></h2>
+                                <div class="current-level-header">
+                                    <div class="level-info">
+                                        <p class="level-label">Current Level</p>
+                                        <h2 id="display-active-level" class="level-title">Level <?= htmlspecialchars($active_level) ?></h2>
                                     </div>
-                                    <div style="display: flex; gap: 10px;">
+                                    <div class="level-nav-buttons">
                                         <button id="btn-prev-level" class="btn-level-nav <?= !$prev_level ? 'disabled' : '' ?>" <?= !$prev_level ? 'disabled' : '' ?>>
                                             <span class="material-symbols-outlined" style="font-size: 18px;">chevron_left</span> Previous Level
                                         </button>
@@ -879,14 +883,14 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
     </main>
 
     <script>
-        let activeLevel = <?= json_encode($active_level) ?>;
-        const recommendedLevel = <?= json_encode($recommended_level) ?>;
-        const allLevels = <?= json_encode($all_levels) ?>;
-        const levelsData = <?= json_encode($levels_data) ?>;
-        const completedMaterials = <?= json_encode($completed_materials) ?>;
-        const graphPracticeByLevel = <?= json_encode($graph_practice_by_level) ?>;
+        let activeLevel = <?= json_encode($active_level, JSON_INVALID_UTF8_SUBSTITUTE) ?: 'null' ?>;
+        const recommendedLevel = <?= json_encode($recommended_level, JSON_INVALID_UTF8_SUBSTITUTE) ?: 'null' ?>;
+        const allLevels = <?= json_encode($all_levels, JSON_INVALID_UTF8_SUBSTITUTE) ?: '[]' ?>;
+        const levelsData = <?= json_encode($levels_data, JSON_INVALID_UTF8_SUBSTITUTE) ?: '{}' ?>;
+        const completedMaterials = <?= json_encode($completed_materials, JSON_INVALID_UTF8_SUBSTITUTE) ?: '[]' ?>;
+        const graphPracticeByLevel = <?= json_encode($graph_practice_by_level, JSON_INVALID_UTF8_SUBSTITUTE) ?: '{}' ?>;
         let practiceData = (graphPracticeByLevel[activeLevel] || []).slice(-5);
-        const testData = (<?= json_encode($graph_test) ?>).slice(-5);
+        const testData = (<?= json_encode($graph_test, JSON_INVALID_UTF8_SUBSTITUTE) ?: '[]' ?>).slice(-5);
 
         function escapeHTML(str) {
             if (!str) return '';
@@ -1232,7 +1236,13 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
         });
 
         function toggleProfileMenu() {
-            document.getElementById("profileMenu").classList.toggle("show");
+            var menu = document.getElementById("profileMenu");
+            menu.classList.toggle("show");
+        }
+
+        function toggleMobileMenu() {
+            var links = document.querySelector(".navbar-links");
+            links.classList.toggle("show");
         }
 
         window.onclick = function(event) {
@@ -1243,6 +1253,12 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                     if (openDropdown.classList.contains('show')) {
                         openDropdown.classList.remove('show');
                     }
+                }
+            }
+            if (!event.target.matches('.mobile-menu-btn') && !event.target.closest('.navbar-links')) {
+                var mobileMenu = document.querySelector(".navbar-links");
+                if (mobileMenu && mobileMenu.classList.contains('show')) {
+                    mobileMenu.classList.remove('show');
                 }
             }
         }

@@ -175,12 +175,13 @@
     background-color: #a3e635;
     color: #0f172a;
     border: none;
-    padding: 10px 24px;
+    padding: 12px 24px;
     border-radius: 6px;
     font-weight: bold;
     font-size: 15px;
     cursor: pointer;
     transition: background 0.2s;
+    width: 100%;
 }
 
 .btn-save:hover {
@@ -228,6 +229,25 @@
     .settings-wrapper {
         grid-template-columns: 1fr;
     }
+    
+    /* Mengubah struktur wrapper kiri menjadi menyatu dengan wrapper utama */
+    .left-column-wrapper {
+        display: contents;
+    }
+    
+    /* Mengatur urutan elemen pada mobile */
+    .settings-sidebar {
+        order: 1;
+    }
+    
+    .settings-content {
+        order: 2;
+    }
+    
+    .danger-zone-sidebar {
+        order: 3;
+    }
+    
     .form-row {
         grid-template-columns: 1fr;
     }

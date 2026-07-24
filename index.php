@@ -131,7 +131,7 @@ $button_text = $is_logged_in ? "Go to Dashboard" : "Start Learning Now";
         }
     </script>
     
-    <link rel="stylesheet" href="desain/index.css">
+    <link rel="stylesheet" href="desain/index.css?v=2.0">
 </head>
 <body class="font-body-md text-body-md antialiased relative">
     <!-- Ambient Background Glows -->
@@ -364,7 +364,7 @@ $button_text = $is_logged_in ? "Go to Dashboard" : "Start Learning Now";
                         <div class="w-full bg-gradient-to-b from-primary via-secondary to-tertiary h-0 timeline-line shadow-[0_0_10px_#adc6ff]" id="timeline-progress"></div>
                     </div>
                     <!-- Step 1 -->
-                    <div class="timeline-step relative flex flex-col md:flex-row items-start md:items-center justify-between mb-stack-lg fade-in-up">
+                    <div class="timeline-step relative flex flex-col md:flex-row items-start md:items-center justify-between mb-stack-lg fade-in-up pl-12 md:pl-0">
                         <div class="md:w-[45%] text-left md:text-right pr-0 md:pr-stack-md order-2 md:order-1 mt-4 md:mt-0">
                             <h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Phase 1: Read &amp; Analyze</h3>
                             <p class="font-body-md text-body-md text-on-surface-variant">Tackle curated, high-academic-level texts designed to stress-test your comprehension under simulated conditions.</p>
@@ -375,7 +375,7 @@ $button_text = $is_logged_in ? "Go to Dashboard" : "Start Learning Now";
                         <div class="md:w-[45%] order-3 hidden md:block"></div>
                     </div>
                     <!-- Step 2 -->
-                    <div class="timeline-step relative flex flex-col md:flex-row items-start md:items-center justify-between mb-stack-lg fade-in-up">
+                    <div class="timeline-step relative flex flex-col md:flex-row items-start md:items-center justify-between mb-stack-lg fade-in-up pl-12 md:pl-0">
                         <div class="md:w-[45%] order-1 hidden md:block"></div>
                         <div class="step-dot absolute left-0 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-surface border-2 border-surface-container flex items-center justify-center z-10 order-1 md:order-2 transition-colors duration-500">
                             <div class="w-3 h-3 bg-surface-container rounded-full transition-colors duration-500"></div>
@@ -386,7 +386,7 @@ $button_text = $is_logged_in ? "Go to Dashboard" : "Start Learning Now";
                         </div>
                     </div>
                     <!-- Step 3 -->
-                    <div class="timeline-step relative flex flex-col md:flex-row items-start md:items-center justify-between fade-in-up">
+                    <div class="timeline-step relative flex flex-col md:flex-row items-start md:items-center justify-between fade-in-up pl-12 md:pl-0">
                         <div class="md:w-[45%] text-left md:text-right pr-0 md:pr-stack-md order-2 md:order-1 mt-4 md:mt-0">
                             <h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 text-tertiary">Phase 3: Break the Locks</h3>
                             <p class="font-body-md text-body-md text-on-surface-variant">Achieve target accuracy to unlock the next level. Gain XP, track streaks, and face the test simulations.</p>
@@ -421,18 +421,9 @@ $button_text = $is_logged_in ? "Go to Dashboard" : "Start Learning Now";
 
     <!-- Footer -->
     <footer class="bg-surface-container-lowest w-full bg-gradient-to-t from-primary/10 to-transparent border-t border-outline-variant relative z-10">
-        <div class="max-w-container-max mx-auto py-stack-lg px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-stack-md">
-            <div class="col-span-1 md:col-span-1">
-                <div class="logo mb-2" style="font-size: 20px;">ReadQuest</div>
-                <p class="font-body-md text-body-md text-on-surface-variant text-sm">© <?= date("Y"); ?> ReadQuest. All rights reserved.</p>
-            </div>
-            <div class="col-span-1 md:col-span-3 flex flex-wrap gap-stack-md md:justify-end items-center">
-                <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary hover:translate-x-1 transition-all duration-200" href="#">Privacy Policy</a>
-                <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary hover:translate-x-1 transition-all duration-200" href="#">Terms of Service</a>
-                <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary hover:translate-x-1 transition-all duration-200" href="#">Contact Support</a>
-                <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary hover:translate-x-1 transition-all duration-200" href="#">Twitter</a>
-                <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary hover:translate-x-1 transition-all duration-200" href="#">LinkedIn</a>
-            </div>
+        <div class="max-w-container-max mx-auto py-stack-lg px-margin-mobile md:px-margin-desktop text-center">
+            <div class="logo mb-2" style="font-size: 20px;">ReadQuest</div>
+            <p class="font-body-md text-body-md text-on-surface-variant text-sm">© <?= date("Y"); ?> ReadQuest. All rights reserved.</p>
         </div>
     </footer>
 

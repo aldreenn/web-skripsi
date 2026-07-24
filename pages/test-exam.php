@@ -3,7 +3,7 @@ session_start();
 include '../config/koneksi.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /aplikasi_skripsi/pages/loginpage.html');
+    header('Location: /pages/loginpage.html');
     exit;
 }
 

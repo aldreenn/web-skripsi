@@ -253,6 +253,26 @@ a {
     }
 }
 
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 0 16px;
+        margin: 0 auto 60px;
+        min-height: auto;
+    }
+    .hero-content h1 {
+        font-size: 32px !important;
+    }
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+    .hero-actions a {
+        width: 250px;
+        box-sizing: border-box;
+    }
+}
+
 /* Custom Utilities and Animations */
 .glass-panel {
     background: rgba(30, 41, 59, 0.7);

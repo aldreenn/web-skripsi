@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /aplikasi_skripsi/pages/loginpage.html');
+    header('Location: /pages/loginpage.html');
     exit;
 }
 
@@ -121,6 +121,50 @@ if (!empty($first_name) && !empty($last_name)) {
     $initials = strtoupper(substr($username, 0, 1));
     $full_name = ucfirst($username);
 }
+
+// ==========================================
+// LOGIKA BADGE CEFR DI DROPDOWN
+// ==========================================
+$query_cefr = mysqli_query($conn, "SELECT test_packet, MAX(toefl_score) as max_score FROM test_scores WHERE user_id = '$user_id' GROUP BY test_packet");
+$test_scores = [];
+if ($query_cefr) {
+    while ($row = mysqli_fetch_assoc($query_cefr)) {
+        $test_scores[strtoupper($row['test_packet'])] = $row['max_score'];
+    }
+}
+
+$has_paket_a = isset($test_scores['A']);
+$highest_cefr_badge = null;
+
+if ($has_paket_a) {
+    $max_toefl_all = 0;
+    foreach ($test_scores as $pkt => $score) {
+        if ($score > $max_toefl_all) {
+            $max_toefl_all = $score;
+        }
+    }
+    
+    // Tentukan CEFR level berdasarkan skor toefl tertinggi
+    if ($max_toefl_all >= 63) {
+        $badge_label = 'C1: The Maestro';
+        $badge_color = '#a855f7'; // Ungu
+    } elseif ($max_toefl_all >= 56) {
+        $badge_label = 'B2: The Vanguard';
+        $badge_color = '#f59e0b'; // Kuning
+    } elseif ($max_toefl_all >= 48) {
+        $badge_label = 'B1: The Voyager';
+        $badge_color = '#3b82f6'; // Biru
+    } else {
+        $badge_label = 'A2: The Conqueror';
+        $badge_color = '#22c55e'; // Hijau
+    }
+
+    $highest_cefr_badge = [
+        'label' => $badge_label,
+        'color' => $badge_color,
+        'bg' => $badge_color . '20' // 20% opacity
+    ];
+}
 ?>
 
 <!DOCTYPE html>
@@ -129,20 +173,24 @@ if (!empty($first_name) && !empty($last_name)) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Account | ReadQuest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link rel="stylesheet" href="/aplikasi_skripsi/desain/dashboard.css?v=<?= time(); ?>">
-  <link rel="stylesheet" href="/aplikasi_skripsi/desain/manage_account.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="../desain/dashboard.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="../desain/manage_account.css?v=<?= time(); ?>">
 </head>
 <body>
   <nav class="navbar" aria-label="Primary">
     <div class="navbar-left">
-      <a href="/aplikasi_skripsi/pages/dashboard.php#home" class="navbar-logo">ReadQuest</a>
+      <span class="material-symbols-outlined mobile-menu-btn" onclick="toggleMobileMenu()" style="display: none; cursor: pointer; margin-right: 15px; font-size: 28px; user-select: none;">menu</span>
+      <a href="../pages/dashboard.php" class="navbar-logo">ReadQuest</a>
     </div>
     <ul class="navbar-center navbar-links">
-      <li><a href="/aplikasi_skripsi/pages/dashboard.php#home">Home</a></li>
-      <li><a href="/aplikasi_skripsi/pages/practice.php">Practice</a></li>
-      <li><a href="/aplikasi_skripsi/pages/test.php">Test</a></li>
-      <li><a href="/aplikasi_skripsi/pages/dashboard.php#leaderboard">Leaderboard</a></li>
+      <li><a href="dashboard.php">Home</a></li>
+      <li><a href="practice.php">Practice</a></li>
+      <li><a href="test.php">Test</a></li>
+      <li><a href="dashboard.php#leaderboard">Leaderboard</a></li>
     </ul>
     <div class="navbar-right">
       <div class="profile-dropdown">
@@ -150,17 +198,25 @@ if (!empty($first_name) && !empty($last_name)) {
           <?php echo $initials; ?>
         </div>
         <div class="dropdown-content" id="profileMenu">
-          <div class="dropdown-header">
+          <div class="dropdown-header" style="display: flex; flex-direction: column;">
             <span class="user-name-drop"><?php echo $full_name; ?></span>
+            <?php if ($highest_cefr_badge): ?>
+            <div class="user-badge-drop" style="background-color: <?= $highest_cefr_badge['bg'] ?>; border: 1px solid <?= $highest_cefr_badge['color'] ?>; color: <?= $highest_cefr_badge['color'] ?>;">
+                <span class="material-symbols-outlined" style="font-size: 14px; margin-right: 4px;">military_tech</span>
+                <?= $highest_cefr_badge['label'] ?>
+            </div>
+            <?php else: ?>
             <small style="color: #64748b; font-size: 12px; display: block;">Student</small>
+            <?php endif; ?>
           </div>
-          <a href="/aplikasi_skripsi/pages/manage_account.php">
-              <span class="material-symbols-outlined">settings</span> Manage Account
+          <a href="manage_account.php">
+            <span class="material-symbols-outlined">manage_accounts</span> Manage Account
           </a>
-          <div class="dropdown-divider"></div>
-          <a href="/aplikasi_skripsi/auth/logout.php" class="logout-text">
-              <span class="material-symbols-outlined">logout</span> Log Out
-          </a>
+          <div class="dropdown-item">
+            <a href="../auth/logout.php" class="logout-text">
+                <span class="material-symbols-outlined">logout</span> Log Out
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -323,6 +379,11 @@ if (!empty($first_name) && !empty($last_name)) {
                 }
             }
         }
+    }
+
+    function toggleMobileMenu() {
+        const navLinks = document.querySelector('.navbar-links');
+        navLinks.classList.toggle('show');
     }
 
     function confirmReset() {

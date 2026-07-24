@@ -1,3 +1,3 @@
 <?php
-header("Location: /aplikasi_skripsi/index.php");
+header("Location: /index.php");
 exit;

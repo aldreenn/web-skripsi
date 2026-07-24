@@ -104,7 +104,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'add_article';
     </script>
 
     <div class="sidebar-footer">
-        <a href="/aplikasi_skripsi/auth/logout.php" class="logout-btn">Logout</a>
+        <a href="/auth/logout.php" class="logout-btn">Logout</a>
     </div>
 </aside>
 

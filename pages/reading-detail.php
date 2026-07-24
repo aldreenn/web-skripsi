@@ -6,7 +6,7 @@ session_start();
 // PROTEKSI KEAMANAN: Cek apakah user sudah login
 // ========================================================
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /aplikasi_skripsi/pages/loginpage.html');
+    header('Location: /pages/loginpage.html');
     exit;
 }
 
@@ -80,7 +80,7 @@ $json_questions = json_encode($questions);
 
         <?php if (!empty($data['cover_image'])): ?>
             <div class="cover-image-container">
-                <img src="/aplikasi_skripsi/uploads/materials/<?= $data['cover_image']; ?>" alt="Material Visual">
+                <img src="/uploads/materials/<?= $data['cover_image']; ?>" alt="Material Visual">
             </div>
         <?php endif; ?>
         

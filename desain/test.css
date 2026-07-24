@@ -170,3 +170,36 @@ body {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ========================================================
+   RESPONSIF (MOBILE)
+   ======================================================== */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #334155;
+        padding: 20px;
+    }
+
+    .main-content {
+        padding: 20px;
+        overflow-y: visible;
+    }
+    
+    .content-header h2 {
+        font-size: 24px;
+    }
+    
+    .quick-info {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}

@@ -772,6 +772,37 @@ STYLING LEADERBOARD GELAP
   line-height: 1.5;
 }
 
+/* Styling for Current Level Header */
+.current-level-header {
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.level-info .level-label {
+  color: #a3e635;
+  margin: 0 0 5px 0;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.level-info .level-title {
+  color: #f8fafc;
+  margin: 0;
+}
+
+.level-nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 /* ========================================================
 RESPONSIF (MOBILE)
 ======================================================== */
@@ -788,10 +819,94 @@ RESPONSIF (MOBILE)
 
   .navbar {
     padding: 0 15px;
+    position: relative;
+  }
+
+  .mobile-menu-btn {
+    display: inline-block !important;
   }
 
   .navbar-links {
     display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #1e293b;
+    flex-direction: column;
+    padding: 10px 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    z-index: 1000;
+    transform: none; /* override translateX(-50%) */
+  }
+
+  .navbar-links.show {
+    display: flex;
+  }
+
+  .navbar-links li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-links a {
+    display: block;
+    padding: 15px;
+  }
+
+  .dropdown-content {
+    right: 0;
+    left: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .panel-header {
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .panel-tabs span {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 13px;
+  }
+
+  .thm-article-card {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  
+  .thm-article-info {
+    flex: 1 1 100%;
+    min-width: 150px;
+  }
+  
+  .thm-article-info h4 {
+    font-size: 15px;
+  }
+  
+  .thm-article-info p {
+    font-size: 12px;
+  }
+
+  /* Badge untuk Test Path agar tidak bertumpuk */
+  .user-badge-drop {
+    margin-left: 0 !important;
+    margin-top: 5px !important;
+    align-self: flex-start;
+  }
+
+  .current-level-header {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .level-nav-buttons {
+    justify-content: center;
+    width: 100%;
   }
 }
 
