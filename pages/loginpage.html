@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Login | ReadQuest</title>
+  <link rel="stylesheet" href="/aplikasi_skripsi/desain/loginpage.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+  <div class="login-wrapper">
+    <form id="loginForm" action="/aplikasi_skripsi/auth/login.php" method="post">
+      <div class="login-header">
+        <h1 class="login-title">ReadQuest</h1>
+        <p class="login-subtitle">Welcome back! Please login to your account.</p>
+      </div>
+      <div id="warningBox" class="warning" aria-live="polite"></div>
+      <div class="input-group">
+        <span class="material-symbols-outlined">person</span>
+        <input type="text" id="username" name="username" placeholder="Username" />
+      </div>
+      <div class="input-group">
+        <span class="material-symbols-outlined">lock</span>
+        <input type="password" id="password" name="password" placeholder="Password" />
+        <span class="material-symbols-outlined toggle-password" style="display: none;">visibility_off</span>
+      </div>
+      <input type="submit" value="Login" />
+      <p class="signup-hint">
+        <span>Don't have an account?</span>
+        <a href="/aplikasi_skripsi/pages/signup.html">Sign up here</a>
+      </p>
+    </form>
+  </div>
+  <script>
+    (function () {
+      const form = document.getElementById("loginForm");
+      const warningBox = document.getElementById("warningBox");
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+      const togglePassword = document.querySelector(".toggle-password");
+
+      // Password visibility toggle
+      if (togglePassword) {
+        // Show/hide based on input content
+        const toggleVisibility = () => {
+          togglePassword.style.display = passwordInput.value.length > 0 ? "block" : "none";
+        };
+
+        // Check on load (for autofill) and on input
+        toggleVisibility();
+        passwordInput.addEventListener("input", toggleVisibility);
+
+        togglePassword.addEventListener("click", function () {
+          const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+          passwordInput.setAttribute("type", type);
+          this.textContent = type === "password" ? "visibility_off" : "visibility";
+        });
+      }
+
+      // Baca pesan error dari parameter URL (?error=...)
+      const params = new URLSearchParams(window.location.search);
+      const serverError = params.get("error");
+      if (serverError) {
+        showWarning(serverError);
+      }
+
+      form.addEventListener("submit", function (event) {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (username === "" && password === "") {
+          event.preventDefault();
+          showWarning("Username and Password are required");
+          return;
+        }
+
+        if (username === "") {
+          event.preventDefault();
+          showWarning("Username is required");
+          return;
+        }
+
+        if (password === "") {
+          event.preventDefault();
+          showWarning("Password is required");
+          return;
+        }
+
+        // Clear warning when input valid (biar pesan lama hilang)
+        hideWarning();
+      });
+
+      function showWarning(message) {
+        warningBox.textContent = message;
+        warningBox.classList.add("show");
+      }
+
+      function hideWarning() {
+        warningBox.textContent = "";
+        warningBox.classList.remove("show");
+      }
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+/* --- GAYA DASAR & TEMA GELAP --- */
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background-color: #0f172a; 
+    margin: 0;
+    padding: 0;
+    color: #e2e8f0;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* --- BAGIAN KIRI: SIDEBAR --- */
+.sidebar {
+    width: 280px;
+    background-color: #1e293b; 
+    border-right: 1px solid #334155;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.section-title {
+    font-size: 12px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    padding-left: 10px;
+    font-weight: 700;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.topic-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #94a3b8;
+    text-align: left;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-top {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.topic-btn .icon {
+    margin-right: 12px;
+    color: #f59e0b; /* Warna icon Test diubah jadi Oranye */
+}
+
+.topic-btn:hover {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+.topic-btn.active {
+    background-color: #0f172a;
+    color: #ffffff;
+    border-left: 4px solid #f59e0b; /* Border aktif warna Oranye */
+    border-radius: 0 8px 8px 0;
+}
+
+.back-button-container {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+/* Gaya Tombol Back to Home (Lebar Penuh) */
+.back-btn {
+    background-color: #3b82f6;
+    color: #ffffff;
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.back-btn:hover {
+    background-color: #2563eb;
+}
+
+.back-btn:active {
+    transform: scale(0.98);
+}
+
+/* --- BAGIAN KANAN: AREA KONTEN --- */
+.main-content {
+    flex: 1;
+    background-color: #0f172a;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.reading-content { display: none; width: 100%; }
+.reading-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+.content-header { margin-bottom: 30px; }
+.content-header h2 { margin: 0 0 10px 0; font-size: 28px; color: #ffffff; }
+.header-desc { color: #94a3b8; font-size: 15px; margin: 0; }
+
+.quick-info {
+    display: flex;
+    justify-content: space-between;
+    background-color: #1e293b;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    font-size: 14px;
+    border: 1px solid #334155;
+}
+.vocab-focus { color: #e2e8f0; }
+
+.reading-card {
+    background-color: #1e293b;
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid #334155;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: 0.3s;
+}
+.reading-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+.card-badges { margin-bottom: 15px; display: flex; gap: 10px; align-items: center;}
+.card-badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: #fff; }
+
+.read-btn {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    color: white;
+    transition: 0.2s;
+}
+.read-btn:hover { background-color: #d97706 !important; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

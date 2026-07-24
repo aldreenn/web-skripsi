@@ -1,0 +1,503 @@
+/* ========================================================
+   GAYA KHUSUS RUANG UJIAN (test-exam.php)
+   ======================================================== */
+
+   * {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', Arial, sans-serif;
+    background-color: #0f172a;
+    color: #e2e8f0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Mencegah scroll di body utama */
+}
+
+/* --- HEADER UJIAN --- */
+.exam-header {
+    background-color: #1e293b;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.exam-header h2 {
+    margin: 0; 
+    color: #ffffff;
+}
+
+.timer-box {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    letter-spacing: 2px;
+}
+
+/* --- KONTAINER SPLIT-SCREEN --- */
+.exam-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* --- PANEL KIRI: TEKS BACAAN --- */
+.passage-panel {
+    flex: 1;
+    background-color: #1e293b;
+    padding: 40px;
+    overflow-y: auto;
+    border-right: 2px solid #334155;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #cbd5e1;
+}
+
+.passage-panel h3 {
+    color: #3b82f6; 
+    border-bottom: 1px solid #334155; 
+    padding-bottom: 10px; 
+    margin-top: 0;
+}
+
+.passage-placeholder {
+    text-align: center; 
+    color: #64748b; 
+    font-size: 14px; 
+    margin-top: 20px;
+}
+
+/* --- PANEL KANAN: DAFTAR SOAL --- */
+.question-panel {
+    flex: 1;
+    background-color: #0f172a;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.question-card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.question-text {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.option-label {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.option-label:hover {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+.submit-btn {
+    background-color: #f59e0b;
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover { 
+    background-color: #d97706; 
+}
+
+/* --- NAVIGASI TAB PASSAGE --- */
+.tabs-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 20px;
+}
+
+.tab-btn {
+    background-color: #0f172a;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s;
+    font-family: inherit;
+}
+
+.tab-btn:hover {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+.tab-btn.active {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border-color: #3b82f6;
+}
+
+/* --- KONTROL VISIBILITAS KONTEN --- */
+.passage-content {
+    display: none;
+}
+.passage-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.questions-content {
+    display: none;
+}
+.questions-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* === CUSTOM MODAL (POP-UP) === */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.85); /* Latar belakang gelap transparan */
+    backdrop-filter: blur(4px);
+    display: none; /* Sembunyikan secara default */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-box {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.show .modal-box {
+    transform: translateY(0);
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+.modal-message {
+    font-size: 15px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: #cbd5e1;
+    border: 1px solid #475569;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+}
+
+.btn-cancel:hover {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+.btn-confirm-modal {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+}
+
+.btn-confirm-modal:hover {
+    background-color: #2563eb;
+}
+
+.btn-confirm-modal.warning {
+    background-color: #f59e0b;
+}
+
+.btn-confirm-modal.warning:hover {
+    background-color: #d97706;
+}
+
+/* === UI STEPPER PATH (TITIK TERHUBUNG) === */
+.stepper-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+    padding: 10px 0;
+    position: relative;
+    border: none;
+    background-color: transparent;
+}
+
+/* Garis penghubung di belakang titik-titik */
+.stepper-header::before {
+    content: '';
+    position: absolute;
+    top: 23px; /* Sejajar dengan titik */
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background-color: #334155;
+    z-index: 1;
+}
+
+.step-indicator {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    flex: 1;
+}
+
+/* Lingkaran Titik (Dot) */
+.step-indicator::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #1e293b; /* Warna background agar menutupi garis belakang */
+    border: 3px solid #334155;
+    transition: all 0.3s ease;
+}
+
+/* Saat Sedang Dikerjakan (Biru) */
+.step-indicator.active {
+    color: #3b82f6;
+}
+.step-indicator.active::before {
+    background-color: #3b82f6;
+    border-color: #93c5fd;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+/* Saat Sudah Selesai (Hijau) */
+.step-indicator.completed {
+    color: #22c55e;
+}
+.step-indicator.completed::before {
+    background-color: #22c55e;
+    border-color: #86efac;
+}
+
+.step-indicator.incomplete {
+    color: #ef4444;
+}
+.step-indicator.incomplete::before {
+    background-color: #ef4444;
+    border-color: #fca5a5;
+}
+
+/* === PERBAIKAN ALIGNMENT PILIHAN GANDA === */
+.option-label {
+    display: flex;
+    align-items: flex-start; /* Memaksa teks sejajar dari atas */
+    gap: 12px;
+    padding: 15px 20px;
+    /* CSS background & border bawaan Anda akan otomatis mengikuti dari atas file */
+}
+
+/* Mencegah radio button mengecil dan merapikan posisinya */
+.option-label input[type="radio"] {
+    margin-top: 2px;
+    flex-shrink: 0; 
+}
+
+/* === KONTEN SOAL PER TAHAP === */
+.step-content {
+    display: none;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.step-content.active {
+    display: block;
+}
+
+.step-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #334155;
+}
+
+.btn-nav {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+
+.btn-prev {
+    background-color: #334155;
+    color: #cbd5e1;
+}
+
+.btn-prev:hover {
+    background-color: #475569;
+}
+
+.btn-next {
+    background-color: #3b82f6;
+    color: #ffffff;
+    margin-left: auto;
+}
+
+.btn-next:hover {
+    background-color: #2563eb;
+}
+
+/* === EFEK STABILO (HIGHLIGHT) === */
+.highlight-vocab {
+    background-color: #fef08a; /* Kuning Stabilo */
+    color: #000000;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(254, 240, 138, 0.5);
+    transition: background-color 0.3s ease;
+}
+
+/* === REVISI: STEPPER DI HEADER === */
+.exam-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Pastikan header memiliki tinggi dan padding yang cukup */
+    padding: 15px 30px; 
+}
+
+.exam-header h2 {
+    flex: 1; /* Sisi Kiri (Judul) */
+    margin: 0;
+}
+
+.header-stepper-container {
+    flex: 2; /* Sisi Tengah (Lebih lebar untuk stepper) */
+    display: flex;
+    justify-content: center;
+}
+
+.header-stepper-container .stepper-header {
+    margin-bottom: 0; /* Hilangkan margin karena sudah di header */
+    width: 100%;
+    max-width: 500px; /* Batasi lebar stepper agar tidak melar */
+}
+
+/* Membungkus timer agar tetap di kanan */
+.timer-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* ========================================================
+   KUSTOMISASI SCROLLBAR TEMA GELAP
+======================================================== */
+/* Untuk Chrome, Edge, Safari, dan Opera */
+::-webkit-scrollbar {
+    width: 8px;  /* Lebar scrollbar vertikal */
+    height: 8px; /* Tinggi scrollbar horizontal */
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a; /* Warna jalur scrollbar (senada dengan background utama) */
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155; /* Warna batang scrollbar (abu-abu kebiruan gelap) */
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6; /* Berubah jadi biru terang saat disorot mouse */
+}
+
+/* Khusus untuk Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #334155 #0f172a;
+}
+
+/* Memperkecil sedikit scrollbar di dalam area panel soal/teks agar lebih elegan */
+.passage-panel::-webkit-scrollbar,
+.question-panel::-webkit-scrollbar {
+    width: 6px;
+}

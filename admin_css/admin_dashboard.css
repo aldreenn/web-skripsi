@@ -1,0 +1,478 @@
+/* ==============================================================================
+   FILE: admin_css/admin_dashboard.css
+   TEMA: ReadQuest Dark Mode Style (Deep Slate Blue & Neon Lime Green)
+   ============================================================================== */
+
+/* --- RESET DASAR --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #0b1322; /* Latar belakang luar super gelap khas ReadQuest */
+    color: #ffffff; /* Semua teks utama menggunakan warna putih */
+    overflow: hidden; /* Tetap hidden agar scroll hanya di area konten */
+    height: 100vh;
+}
+
+.admin-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 260px;
+    background-color: #152238; /* Warna panel sidebar sedikit lebih terang dari background utama */
+    border-right: 1px solid #26354a; /* Garis pembatas tipis bernuansa biru gelap */
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    padding: 24px;
+    border-bottom: 3px solid #26354a;
+    text-align: center;
+}
+
+.sidebar-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.sidebar-menu {
+    list-style: none;
+    flex-grow: 1;
+    padding: 20px 0; /* Diubah menjadi 0 di kiri-kanan agar garis indikator menempel ke ujung */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    color: #94a3b8; /* Warna menu saat tidak aktif (abu-abu lembut) */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.2s ease-in-out;
+    border-left: 4px solid transparent; /* Kerangka garis indikator kiri */
+}
+
+.sidebar-menu li a:hover {
+    background-color: #1e293b;
+    color: #ffffff;
+}
+
+/* Penyesuaian Menu Aktif dengan Garis Kiri Neon & Teks Hijau Lime */
+.sidebar-menu li a.active {
+    background-color: rgba(163, 230, 53, 0.06); /* Kilau hijau tipis di background */
+    color: #a3e635; /* Teks berubah menjadi hijau lime kustom */
+    border-left: 4px solid #a3e635; /* Garis indikator menyala di sebelah kiri menu */
+    font-weight: 700;
+}
+
+.sidebar-footer {
+    padding: 20px 16px;
+    border-top: 1px solid #26354a;
+}
+
+.logout-btn {
+    display: block;
+    text-align: center;
+    background-color: transparent;
+    color: #ffffff;
+    padding: 12px;
+    border: 1.5px solid #ef4444;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #ef4444; /* Warna merah tegas saat tombol logout disorot */
+    border-color: #ef4444;
+    color: #ffffff;
+}
+
+/* --- KONTEN UTAMA --- */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #0b1322;
+    overflow-y: scroll; /* Scroll selalu aktif agar layout tidak bergeser */
+}
+
+/* --- CUSTOM SCROLLBAR GLOBAL UNTUK SEMUA ELEMEN --- */
+::-webkit-scrollbar { 
+    width: 8px; 
+    height: 8px; /* Untuk scroll horizontal jika tabel kepanjangan */
+}
+::-webkit-scrollbar-track { 
+    background: #0b1322; /* Latar belakang jalur scroll (gelap) */
+}
+::-webkit-scrollbar-thumb { 
+    background: #26354a; /* Warna batang scrollbar (biru navy/slate kalem) */
+    border-radius: 10px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+    background: #334155; /* Sedikit lebih terang saat kursor menyentuh scrollbar */
+}
+
+/* Khusus scrollbar di dalam Card/Table agar warnanya nyambung dengan background card */
+.table-container::-webkit-scrollbar-track,
+.sidebar-menu::-webkit-scrollbar-track {
+    background: #152238; 
+}
+
+.content-header {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.content-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.content-header p {
+    color: #94a3b8; /* Sub-deskripsi judul menggunakan warna redup */
+    margin-top: 4px;
+    font-size: 14px;
+}
+
+/* Kotak Konten Utama Berwarna Navy-Slate */
+.admin-card {
+    background-color: #152238;
+    border: 1px solid #26354a;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+/* --- ELEMEN FORMULIR --- */
+.add-material-form {
+    display: flex;
+    flex-direction: column;
+}
+.form-row { display: flex; gap: 20px; }
+.form-group { flex: 1; margin-bottom: 18px; }
+
+/* Kotak Pilihan Jawaban / Kategori Khusus */
+.option-box {
+    background: #0b1322; /* Kembali menggelap di dalam area input pilihan */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #26354a;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #e2e8f0; /* Label kontras abu-abu terang */
+}
+
+/* Penyesuaian Kolom Input Bertema Gelap */
+input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #26354a;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background-color: #0b1322; /* Kolom isian berwarna gelap gulita */
+    color: #ffffff; /* Teks ketikan berwarna putih */
+    transition: all 0.2s ease-in-out;
+}
+textarea { resize: vertical; min-height: 80px; }
+
+/* Efek Fokus saat Kolom diklik (Menyala Hijau Neon) */
+input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+    border-color: #a3e635;
+    outline: none;
+    box-shadow: 0 0 0 1px #a3e635;
+}
+
+.form-actions { 
+    margin-top: 10px; 
+    text-align: right; 
+    padding-bottom: 20px;
+}
+
+/* Tombol Eksekusi Utama Berwarna Hijau Neon Pekat */
+.submit-btn {
+    background-color: #a3e635; /* Warna hijau neon lime */
+    color: #0b1322; /* Teks tombol gelap agar terbaca jelas */
+    padding: 14px 40px;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+}
+.submit-btn:hover {
+    background-color: #84cc16; /* Menjadi sedikit lebih gelap saat disentuh */
+    transform: translateY(-1px);
+}
+
+/* --- ANTARMUKA TABEL DATA --- */
+.table-toolbar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.table-toolbar .search-box {
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.table-container {
+    overflow-y: scroll; /* Memaksa scrollbar agar tabel tidak bergeser */
+    border: 1px solid #26354a;
+    border-radius: 8px;
+    background-color: #152238;
+    max-height: 500px;
+}
+
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.score-table th {
+    background-color: #1e293b; /* Kepala tabel menggunakan abu-abu gelap terstruktur */
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    border-bottom: 1px solid #26354a;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.score-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #26354a;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+/* Variasi Warna Nilai */
+.score-perfect { color: #a3e635; font-weight: 700; }
+.score-good { color: #38bdf8; }
+.score-bad { color: #f87171; }
+.font-semibold { font-weight: 600; }
+
+/* ========================================================
+   MANAGE PACKAGE TEST (GRID & UTILITIES)
+   ======================================================== */
+
+/* Grid Layout untuk membelah layar (Form 1 Bagian, Tabel 2 Bagian) */
+.manage-packets-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* Judul di dalam card */
+.panel-title {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #e2e8f0;
+}
+
+/* Margin bottom tambahan */
+.mb-25 {
+    margin-bottom: 25px;
+}
+
+/* Tombol Lebar Penuh */
+.btn-full {
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+    justify-content: center;
+}
+
+/* Huruf otomatis Kapital (untuk Kode Paket) */
+.input-uppercase {
+    text-transform: uppercase;
+}
+
+/* Ikon di dalam tombol agar sejajar vertikal */
+.icon-valign {
+    font-size: 18px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* ========================================================
+   TABLE & TEXT UTILITIES
+   ======================================================== */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #cbd5e1;
+}
+
+.text-highlight {
+    color: #f59e0b; /* Warna Oranye Khas ReadQuest */
+}
+
+.fw-bold {
+    font-weight: bold;
+}
+
+/* Tombol hapus versi kecil di tabel */
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+/* Badge/Label untuk teks "Tanpa Syarat" */
+.badge-green {
+    color: #a3e635;
+    font-size: 12px;
+    padding: 4px 8px;
+    background: rgba(163, 230, 53, 0.1);
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* ========================================================
+   BASE COMPONENTS (Card, Form, Button, Table)
+   ======================================================== */
+
+/* Wadah Kotak (Card) */
+.card-panel {
+    background-color: #1e293b;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Input */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #3b82f6; /* Warna biru saat diklik */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Tombol Utama (Biru/Aksen) */
+.btn-primary {
+    background-color: #3b82f6; 
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+/* Tombol Bahaya (Merah) */
+.btn-danger {
+    background-color: #ef4444;
+    color: #ffffff !important;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+/* Tabel Data */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+    padding: 14px 15px;
+    text-align: left;
+    border-bottom: 1px solid #334155;
+}
+
+.data-table th {
+    color: #94a3b8;
+    font-weight: 600;
+    background-color: rgba(15, 23, 42, 0.4); /* Latar belakang header tabel yang sedikit gelap */
+}
+
+
+/* Responsif: Jika layar mengecil (HP/Tablet), form dan tabel menjadi atas-bawah */
+@media (max-width: 992px) {
+    .manage-packets-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sign Up | ReadQuest</title>
+    <link rel="stylesheet" href="/aplikasi_skripsi/desain/signup.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  </head>
+  <body>
+    <div class="login-wrapper">
+      <form
+        id="signupForm"
+        action="/aplikasi_skripsi/auth/signup.php"
+        method="post"
+      >
+        <div class="login-header">
+          <h1 class="login-title">ReadQuest</h1>
+          <p class="login-subtitle">Create a new account to get started.</p>
+        </div>
+        <div id="warningBox" class="warning" aria-live="polite"></div>
+
+        <div class="input-group">
+          <span class="material-symbols-outlined">person</span>
+          <input type="text" id="username" name="username" placeholder="Username" required />
+        </div>
+
+        <div class="input-group">
+          <span class="material-symbols-outlined">badge</span>
+          <input type="text" id="first_name" name="first_name" placeholder="First Name" required />
+        </div>
+
+        <div class="input-group">
+          <span class="material-symbols-outlined">badge</span>
+          <input type="text" id="last_name" name="last_name" placeholder="Last Name" required />
+        </div>
+
+        <div class="input-group">
+          <span class="material-symbols-outlined">lock</span>
+          <input type="password" id="password" name="password" placeholder="Password" required />
+        </div>
+
+        <div class="input-group">
+          <span class="material-symbols-outlined">lock</span>
+          <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            placeholder="Confirm Password"
+            required
+          />
+        </div>
+
+        <input type="submit" value="Register" />
+
+        <p class="signup-hint">
+          <span>Already have an account?</span>
+          <a href="/aplikasi_skripsi/pages/loginpage.html">Login here</a>
+        </p>
+      </form>
+    </div>
+
+    <script>
+      (function () {
+        const form = document.getElementById("signupForm");
+        const warningBox = document.getElementById("warningBox");
+        const usernameInput = document.getElementById("username");
+        const firstNameInput = document.getElementById("first_name");
+        const lastNameInput = document.getElementById("last_name");
+        const passwordInput = document.getElementById("password");
+        const confirmInput = document.getElementById("confirm_password");
+
+        // Tampilkan pesan error dari server (query string ?error=...)
+        const params = new URLSearchParams(window.location.search);
+        const serverError = params.get("error");
+        if (serverError) {
+          showWarning(serverError);
+        }
+
+        form.addEventListener("submit", function (event) {
+          const username = usernameInput.value.trim();
+          const firstName = firstNameInput.value.trim();
+          const lastName = lastNameInput.value.trim();
+          const password = passwordInput.value.trim();
+          const confirm = confirmInput.value.trim();
+
+          if (!username || !firstName || !lastName || !password || !confirm) {
+            event.preventDefault();
+            showWarning("All fields are required.");
+            return;
+          }
+
+          if (password !== confirm) {
+            event.preventDefault();
+            showWarning("Passwords do not match.");
+            return;
+          }
+
+          hideWarning();
+        });
+
+        function showWarning(message) {
+          warningBox.textContent = message;
+          warningBox.classList.add("show");
+        }
+
+        function hideWarning() {
+          warningBox.textContent = "";
+          warningBox.classList.remove("show");
+        }
+      })();
+    </script>
+  </body>
+</html>
