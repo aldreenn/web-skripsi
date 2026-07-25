@@ -56,6 +56,9 @@ $result_test = $stmt_test->get_result();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> Score History | ReadQuest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link rel="stylesheet" href="/desain/dashboard.css?v=<?= time(); ?>">
   <link rel="stylesheet" href="/desain/score_history.css?v=<?= time(); ?>">
@@ -123,11 +126,11 @@ $result_test = $stmt_test->get_result();
                     <thead>
                         <tr>
                             <th style="width: 180px;">Completion Date</th>
-                            <th style="width: 80px;">Level</th>
-                            <th style="width: 200px;">Topic</th>
+                            <th class="hide-mobile" style="width: 80px;">Level</th>
+                            <th class="hide-mobile" style="width: 200px;">Topic</th>
                             <th>Practice Article Title</th>
-                            <th>Time Taken</th>
-                            <th style="text-align: center; width: 100px;">ITP Score</th>
+                            <th class="hide-mobile">Time Taken</th>
+                            <th class="hide-mobile" style="text-align: center; width: 100px;">ITP Score</th>
                             <th style="text-align: right; width: 120px;">Score (XP)</th>
                         </tr>
                     </thead>
@@ -137,11 +140,11 @@ $result_test = $stmt_test->get_result();
                                 <tr>
                                     <td class="date-col"><?= date('d M Y, H:i', strtotime($row['created_at'])) ?></td>
                                     
-                                    <td style="color: #cbd5e1; font-weight: 600;">
+                                    <td class="hide-mobile" style="color: #cbd5e1; font-weight: 600;">
                                         <span class="level-badge"><?= htmlspecialchars($row['level'] ?? 'A1') ?></span>
                                     </td>
                                     
-                                    <td style="color: #94a3b8; font-weight: 500;">
+                                    <td class="hide-mobile" style="color: #94a3b8; font-weight: 500;">
                                         <?= htmlspecialchars($row['topic']) ?> 
                                     </td>
                                     
@@ -149,7 +152,7 @@ $result_test = $stmt_test->get_result();
                                         <?= htmlspecialchars($row['title']) ?>
                                     </td>
 
-                                    <td style="color: #94a3b8;">
+                                    <td class="hide-mobile" style="color: #94a3b8;">
                                         <?php 
                                             // Memastikan nilai default adalah 0 jika kosong
                                             $waktu_detik = isset($row['duration_seconds']) ? (int)$row['duration_seconds'] : 0;
@@ -159,7 +162,7 @@ $result_test = $stmt_test->get_result();
                                         ?>
                                     </td>
                                     
-                                    <td style="text-align: center; font-weight: 600; color: #e2e8f0;">
+                                    <td class="hide-mobile" style="text-align: center; font-weight: 600; color: #e2e8f0;">
                                         <?php if(in_array($row['level'], ['A2', 'B1', 'B2', 'C1'])): ?>
                                             <?= htmlspecialchars($row['itp_score'] ?? '-') ?>
                                         <?php else: ?>

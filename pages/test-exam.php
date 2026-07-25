@@ -17,7 +17,7 @@ $cek_skor = mysqli_query($conn, "SELECT id FROM test_scores WHERE user_id = '$us
 if (mysqli_num_rows($cek_skor) > 0) {
     // Jika di database sudah ada nilai untuk user ini dan paket ini, tendang keluar!
     echo "<script>
-            alert('Access Denied! You have already completed Exam Packet {$paket} and are not allowed to retake it.');
+            alert('Access Denied! You have already completed Exam Package {$paket} and are not allowed to retake it.');
             window.location.href = 'test.php';
           </script>";
     exit;
@@ -64,7 +64,7 @@ while ($q = mysqli_fetch_assoc($query_questions)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOEFL Simulation - Packet <?php echo $paket; ?></title>
+    <title>TOEFL Simulation - Package <?php echo $paket; ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../desain/test-exam.css?v=<?= time(); ?>">
     <style>
@@ -87,7 +87,7 @@ while ($q = mysqli_fetch_assoc($query_questions)) {
 <body>
 
     <header class="exam-header">
-        <h2>Exam Packet <?php echo $paket; ?></h2>
+        <h2>Exam Package <?php echo $paket; ?></h2>
         
         <div class="header-stepper-container">
             <?php foreach ($passages as $index => $p): $pid = $p['id']; ?>

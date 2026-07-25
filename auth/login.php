@@ -30,7 +30,8 @@ function redirectWithError(string $message, int $statusCode = 400, string $redir
 
 // Pastikan request berupa POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirectWithError('Metode harus POST.', 405);
+    header('Location: /pages/loginpage.html');
+    exit;
 }
 
 // Ambil input

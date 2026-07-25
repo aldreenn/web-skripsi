@@ -41,16 +41,16 @@ if ($query_master) {
         if ($pkt_code === 'A') {
              $desc = 'First stage exam simulation to comprehensively measure your basic reading skills. The timer will run continuously.';
         } elseif ($pkt_code === 'B') {
-             $desc = 'Intermediate difficulty level. Unlocks after you complete Test Packet A.';
+             $desc = 'Intermediate difficulty level. Unlocks after you complete Test Package A.';
         } elseif ($pkt_code === 'C') {
-             $desc = 'Final stage exam simulation (Final Boss). Unlocks after you complete Test Packet B.';
+             $desc = 'Final stage exam simulation (Final Boss). Unlocks after you complete Test Package B.';
         }
 
         $test_packets[$pkt_code] = [
-            'title' => $row['title'],
+            'title' => str_replace(['Packet', 'Packets'], ['Package', 'Packages'], $row['title']),
             'desc' => $desc,
             'locked' => $is_locked,
-            'req_msg' => 'Please complete Packet ' . $req . ' first to unlock this test'
+            'req_msg' => 'Please complete Package ' . $req . ' first to unlock this test'
         ];
     }
 }
@@ -105,9 +105,10 @@ $json_active_packet = json_encode($active_packet);
   <body>
     <div class="app-container">
       
-      <aside class="sidebar">
-        <div class="sidebar-section">
-          <p class="section-title">Test Packets</p>
+      <aside class="sidebar" id="test-sidebar">
+        <div class="sidebar-section" style="display: flex; justify-content: space-between; align-items: center;">
+          <p class="section-title" style="margin: 0;">Test Packages</p>
+          <span class="material-symbols-outlined mobile-sidebar-toggle" style="display: none; cursor: pointer; color: #94a3b8;" onclick="toggleTestSidebar()">close</span>
         </div>
 
         <div class="sidebar-menu" id="sidebar-menu"></div>
@@ -123,6 +124,16 @@ $json_active_packet = json_encode($active_packet);
         <div id="dynamic-content" class="reading-content active">
           
           <div class="content-header">
+            <div class="mobile-top-actions" style="display: none; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px; width: 100%; min-height: 46px;">
+                <div id="mobile-back-btn-container" style="display: flex;">
+                    <button id="mobile-back-home-btn" onclick="goBack()" class="back-btn" style="padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: 1px solid #3b82f6; color: white;">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Home
+                    </button>
+                </div>
+                <div id="mobile-sidebar-toggle-btn" class="mobile-sidebar-toggle" style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #a3e635; font-weight: bold; border: 1px solid #334155; padding: 10px 12px; border-radius: 8px; background: #1e293b; white-space: nowrap;" onclick="toggleTestSidebar()">
+                    <span class="material-symbols-outlined">menu</span> Select Packages
+                </div>
+            </div>
             <div id="header-text-area"></div>
           </div>
 
@@ -187,6 +198,12 @@ $json_active_packet = json_encode($active_packet);
       function changePacket(pktId) {
           const data = testPackets[pktId];
           
+          // Tutup sidebar jika diakses dari mobile
+          const sidebar = document.getElementById("test-sidebar");
+          if (sidebar && sidebar.classList.contains("show")) {
+              sidebar.classList.remove("show");
+          }
+          
           document.querySelectorAll(".topic-btn:not(.locked)").forEach((btn) => btn.classList.remove("active"));
           const activeBtn = document.getElementById("btn-" + pktId);
           if (activeBtn) activeBtn.classList.add("active");
@@ -245,6 +262,13 @@ $json_active_packet = json_encode($active_packet);
 
       function goBack() {
           window.location.href = "dashboard.php";
+      }
+
+      function toggleTestSidebar() {
+          const sidebar = document.getElementById("test-sidebar");
+          if(sidebar) {
+              sidebar.classList.toggle("show");
+          }
       }
     </script>
   </body>

@@ -511,22 +511,33 @@ body {
     }
 
     .passage-panel {
-        flex: none;
-        height: 40vh;
+        flex: 4;
+        height: auto;
         border-right: none;
         border-bottom: 2px solid #f59e0b;
         padding: 20px;
     }
 
     .question-panel {
-        flex: none;
-        height: 60vh;
+        flex: 6;
+        height: auto;
         padding: 20px;
     }
 
     .exam-header {
         padding: 10px 15px;
         flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .exam-header h2 {
+        white-space: nowrap;
+        font-size: 20px;
+    }
+
+    .tabs-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
     

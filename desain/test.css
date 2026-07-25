@@ -181,11 +181,30 @@ body {
     }
     
     .sidebar {
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid #334155;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background-color: #0f172a;
+        border-right: 1px solid #334155;
+        border-bottom: none;
         padding: 20px;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+    }
+    
+    .sidebar.show {
+        left: 0;
+    }
+    
+    .mobile-top-actions {
+        display: flex !important;
+    }
+
+    .back-button-container {
+        display: none !important;
     }
 
     .main-content {

@@ -806,7 +806,7 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                     ?>
                 </p>
                 
-                <form method="GET" action="dashboard.php" style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; align-items: center;">
+                <form class="leaderboard-filter-form" method="GET" action="dashboard.php" style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; align-items: center;">
                     <input type="text" name="search" placeholder="Search competitor's name..." value="<?= $search; ?>" style="flex-grow: 1; padding: 12px 15px; border: 1px solid #334155; border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; background-color: #0f172a; color: white;">
                     
                     <select name="level_filter" style="padding: 12px 15px; border: 1px solid #334155; border-radius: 8px; font-size: 14px; outline: none; background: #0f172a; color: white; font-family: inherit;">
@@ -822,7 +822,7 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                     <button type="submit" class="btn-primary" style="padding: 12px 24px; margin: 0;">Search</button>
                     
                     <?php if ($search != '' || $level_filter != ''): ?>
-                        <a href="dashboard.php#leaderboard" class="btn-primary" style="padding: 12px 24px; margin: 0; background-color: transparent; border: 1px solid #334155; color: #e2e8f0; text-decoration:none;">Reset</a>
+                        <a href="dashboard.php#leaderboard" class="btn-primary" style="padding: 12px 24px; margin: 0; background-color: transparent; border: 1px solid #334155; color: #e2e8f0; text-decoration:none; text-align: center;">Reset</a>
                     <?php endif; ?>
                 </form>
                 
@@ -832,7 +832,7 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                             <tr>
                                 <th style="width: 80px; text-align: center;">Rank</th>
                                 <th style="text-align: left;">Participant Name</th>
-                                <th style="text-align: center;">Articles Passed</th>
+                                <th class="hide-mobile" style="text-align: center;">Articles Passed</th>
                                 <th style="text-align: right;">Total Score (XP)</th>
                             </tr>
                         </thead>
@@ -866,7 +866,7 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                                     echo "<tr class='{$row_class}'>\n";
                                     echo "    <td style='text-align: center;'><span class='badge-rank'>{$rank}</span></td>\n";
                                     echo "    <td style='font-weight: 500; text-align: left; color:#e2e8f0;'>" . htmlspecialchars($display_name) . "{$user_highlight}</td>\n";
-                                    echo "    <td style='text-align: center; color:#cbd5e1;'>{$row['artikel_lulus']}</td>\n";
+                                    echo "    <td class='hide-mobile' style='text-align: center; color:#cbd5e1;'>{$row['artikel_lulus']}</td>\n";
                                     echo "    <td style='text-align: right; font-weight: bold; color: #a3e635; font-size: 16px;'>" . number_format($row['total_score']) . " XP</td>\n";
                                     echo "</tr>\n";
                                     $rank++;
@@ -1051,7 +1051,8 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                 chartData = [chartData[0], chartData[0]]; // duplicate for a single line span
             }
 
-            const paddingX = 40; // Memberi jarak 40px di kiri dan kanan agar tidak mepet
+            // Memberi jarak ekstra (80px) di kiri & kanan agar label panjang di awal/akhir tidak terpotong overflow container
+            const paddingX = 80; 
             const usableWidth = svgWidth - (paddingX * 2);
             const stepX = usableWidth / Math.max(1, (chartData.length - 1));
 

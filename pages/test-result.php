@@ -121,7 +121,7 @@ $badge_label = isset($cefr_labels[$cefr_level]) ? $cefr_labels[$cefr_level] : $c
             </div>
             <?php endif; ?>
 
-            <a href="test.php" class="btn-back-dashboard">Finish & Back to Menu</a>
+            <a href="test.php?paket=<?php echo urlencode($paket); ?>" class="btn-back-dashboard">Finish & Back to Menu</a>
         </div>
     </div>
 

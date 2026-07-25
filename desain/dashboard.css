@@ -1144,3 +1144,51 @@ html {
   scrollbar-width: thin;
   scrollbar-color: #334155 #0f172a;
 }
+
+/* ========================================================
+   RESPONSIF KHUSUS GRAFIK (MOBILE)
+   ======================================================== */
+@media (max-width: 768px) {
+  /* Cegah grid utama mengalami blowout (melar melebihi layar) */
+  .dash-grid > * {
+    min-width: 0;
+  }
+
+  /* Cegah container melar melampaui layar */
+  .line-chart-container,
+  .graph-wrapper,
+  .performance-graph-panel {
+    max-width: 100%;
+    min-width: 0;
+  }
+  
+  /* Izinkan scroll horizontal */
+  .chart-content {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px; /* Ruang untuk scrollbar */
+    padding-top: 10px; /* Ruang agar titik atas tidak terpotong */
+    min-width: 0;
+  }
+
+  /* Seimbangkan y-axis agar sejajar dengan chart-area yang turun 10px */
+  .y-axis {
+    padding-top: 10px;
+  }
+
+  /* Paksa lebar grafik menjadi lebih besar dari layar HP */
+  .chart-area, 
+  .x-axis {
+    min-width: 600px;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .leaderboard-filter-form {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+}

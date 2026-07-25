@@ -134,16 +134,18 @@ $json_user_scores = json_encode($user_scores, JSON_INVALID_UTF8_SUBSTITUTE) ?: '
         <div id="dynamic-content" class="reading-content active">
           
           <div class="content-header">
-            <div class="mobile-top-actions" style="display: none; flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 20px;">
-                <div class="mobile-sidebar-toggle" style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #a3e635; font-weight: bold; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; background: #1e293b;" onclick="togglePracticeSidebar()">
+            <div class="mobile-top-actions" style="display: none; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px; width: 100%; min-height: 46px;">
+                <div id="mobile-back-btn-container" style="display: flex;">
+                    <button id="mobile-back-home-btn" onclick="goBack()" class="back-btn" style="padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: 1px solid #3b82f6; color: white;">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Home
+                    </button>
+                    <button id="mobile-back-topics-btn" onclick="backToTopicView()" class="back-btn" style="display: none; padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: 1px solid #3b82f6; color: white;">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Topics
+                    </button>
+                </div>
+                <div id="mobile-sidebar-toggle-btn" class="mobile-sidebar-toggle" style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #a3e635; font-weight: bold; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; background: #1e293b;" onclick="togglePracticeSidebar()">
                     <span class="material-symbols-outlined">menu</span> Select Level
                 </div>
-                <button id="mobile-back-home-btn" onclick="goBack()" class="back-btn" style="padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: none; color: white;">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Home
-                </button>
-                <button id="mobile-back-topics-btn" onclick="backToTopicView()" class="back-btn" style="display: none; padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: none; color: white;">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Topics
-                </button>
             </div>
             <div id="header-text-area"></div>
           </div>
@@ -310,8 +312,11 @@ $json_user_scores = json_encode($user_scores, JSON_INVALID_UTF8_SUBSTITUTE) ?: '
         // Tampilkan tombol back home mobile saat di level view
         const mobileBackBtn = document.getElementById("mobile-back-home-btn");
         const mobileBackTopicsBtn = document.getElementById("mobile-back-topics-btn");
+        const mobileSidebarToggleBtn = document.getElementById("mobile-sidebar-toggle-btn");
+        
         if (mobileBackBtn) mobileBackBtn.style.display = "flex";
         if (mobileBackTopicsBtn) mobileBackTopicsBtn.style.display = "none";
+        if (mobileSidebarToggleBtn) mobileSidebarToggleBtn.style.display = "flex";
         
         // Tutup sidebar jika diakses dari mobile
         const sidebar = document.getElementById("practice-sidebar");
@@ -330,9 +335,9 @@ $json_user_scores = json_encode($user_scores, JSON_INVALID_UTF8_SUBSTITUTE) ?: '
         // Tampilkan info progres kelulusan level ini di Header
         let totalArticlesInCurrent = readingData.filter(i => i.level === levelId).length;
         let progressLulus = completedPerLevel[levelId] || 0;
-        let infoSyarat = `<span style="font-size:14px; background:rgba(163, 230, 53, 0.2); padding:4px 10px; border-radius:12px; color:#a3e635; margin-left:10px;">Passed: ${progressLulus}/${totalArticlesInCurrent} Articles</span>`;
+        let infoSyarat = `<div style="margin-bottom: 10px;"><span style="font-size:14px; background:rgba(163, 230, 53, 0.2); padding:4px 10px; border-radius:12px; color:#a3e635; display: inline-block;">Passed: ${progressLulus}/${totalArticlesInCurrent} Articles</span></div>`;
         
-        headerArea.innerHTML = `<h2 style="display:flex; align-items:center;">${titleData.title} ${infoSyarat}</h2><p class="header-desc">${titleData.desc}</p>`;
+        headerArea.innerHTML = `${infoSyarat}<h2 style="display:flex; align-items:center;">${titleData.title}</h2><p class="header-desc">${titleData.desc}</p>`;
 
         const activeTopics = databaseTopics[levelId] || [];
         const topicGrid = document.getElementById("topic-grid");
@@ -363,8 +368,11 @@ $json_user_scores = json_encode($user_scores, JSON_INVALID_UTF8_SUBSTITUTE) ?: '
         // Toggle button back di mobile
         const mobileBackBtn = document.getElementById("mobile-back-home-btn");
         const mobileBackTopicsBtn = document.getElementById("mobile-back-topics-btn");
+        const mobileSidebarToggleBtn = document.getElementById("mobile-sidebar-toggle-btn");
+        
         if (mobileBackBtn) mobileBackBtn.style.display = "none";
         if (mobileBackTopicsBtn) mobileBackTopicsBtn.style.display = "flex";
+        if (mobileSidebarToggleBtn) mobileSidebarToggleBtn.style.display = "none";
 
         document.getElementById("topic-view").style.display = "none";
         document.getElementById("article-view").style.display = "block";
