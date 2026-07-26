@@ -91,6 +91,7 @@ $json_user_scores = json_encode($user_scores, JSON_INVALID_UTF8_SUBSTITUTE) ?: '
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Practice | ReadQuest</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -125,7 +126,7 @@ $json_user_scores = json_encode($user_scores, JSON_INVALID_UTF8_SUBSTITUTE) ?: '
 
         <div class="back-button-container">
             <button onclick="goBack()" class="back-btn">
-                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Home
+                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back
             </button>
         </div>
       </aside>
@@ -137,7 +138,7 @@ $json_user_scores = json_encode($user_scores, JSON_INVALID_UTF8_SUBSTITUTE) ?: '
             <div class="mobile-top-actions" style="display: none; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px; width: 100%; min-height: 46px;">
                 <div id="mobile-back-btn-container" style="display: flex;">
                     <button id="mobile-back-home-btn" onclick="goBack()" class="back-btn" style="padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: 1px solid #3b82f6; color: white;">
-                        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Home
+                        <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back
                     </button>
                     <button id="mobile-back-topics-btn" onclick="backToTopicView()" class="back-btn" style="display: none; padding: 10px 15px; border-radius: 8px; width: max-content; background-color: #3b82f6; border: 1px solid #3b82f6; color: white;">
                         <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Topics

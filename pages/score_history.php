@@ -56,6 +56,7 @@ $result_test = $stmt_test->get_result();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> Score History | ReadQuest</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -66,10 +67,10 @@ $result_test = $stmt_test->get_result();
 <body>
   <nav class="navbar" aria-label="Primary">
     <div class="navbar-left">
-      <a href="/pages/dashboard.php#home" class="navbar-logo">ReadQuest</a>
+      <a href="/pages/dashboard.php" class="navbar-logo">ReadQuest</a>
     </div>
     <ul class="navbar-center navbar-links">
-      <li><a href="/pages/dashboard.php#home">Home</a></li>
+      <li><a href="/pages/dashboard.php">Dashboard</a></li>
       <li><a href="/pages/practice.php">Practice</a></li>
       <li><a href="/pages/test.php">Test</a></li>
       <li><a href="/pages/dashboard.php#leaderboard">Leaderboard</a></li>
@@ -101,8 +102,8 @@ $result_test = $stmt_test->get_result();
     <div class="dashboard-container">
         
         <div style="margin-bottom: 20px;">
-            <a href="/pages/dashboard.php#home" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; width: fit-content;">
-                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Home
+            <a href="/pages/dashboard.php" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; width: fit-content;">
+                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back
             </a>
         </div>
 

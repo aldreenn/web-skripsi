@@ -46,6 +46,7 @@ $badge_label = isset($cefr_labels[$cefr_level]) ? $cefr_labels[$cefr_level] : $c
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Completed | ReadQuest</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../desain/test-result.css?v=<?= time(); ?>">

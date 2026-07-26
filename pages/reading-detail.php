@@ -54,12 +54,13 @@ $json_questions = json_encode($questions);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo htmlspecialchars($data['title']); ?> - ReadQuest</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
     <link rel="stylesheet" href="../desain/readingdetail.css" />
   </head>
   <body>
     <header class="detail-header">
       <div class="back-button-container">
-        <button onclick="window.location.href='practice.php'" class="back-btn">
+        <button onclick="window.location.href='practice.php?lvl=<?php echo strtoupper($data['level']); ?>'" class="back-btn">
           <span class="back-icon">←</span>
         </button>
       </div>
@@ -311,7 +312,7 @@ $json_questions = json_encode($questions);
         submitBtn.innerText = "Finish & Return to Menu";
         submitBtn.classList.add("btn-success");
         submitBtn.onclick = function () {
-          window.location.href = "practice.php";
+          window.location.href = "practice.php?lvl=" + articleData.level.toUpperCase();
         };
 
         document.querySelector(".quiz-pane").scrollTo({ top: 0, behavior: "smooth" });

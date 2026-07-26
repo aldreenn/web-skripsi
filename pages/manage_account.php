@@ -173,6 +173,7 @@ if ($has_paket_a) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Account | ReadQuest</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -187,7 +188,7 @@ if ($has_paket_a) {
       <a href="../pages/dashboard.php" class="navbar-logo">ReadQuest</a>
     </div>
     <ul class="navbar-center navbar-links">
-      <li><a href="dashboard.php">Home</a></li>
+      <li><a href="dashboard.php">Dashboard</a></li>
       <li><a href="practice.php">Practice</a></li>
       <li><a href="test.php">Test</a></li>
       <li><a href="dashboard.php#leaderboard">Leaderboard</a></li>
@@ -312,22 +313,22 @@ if ($has_paket_a) {
                   <h2>Password Manager</h2>
               </div>
 
-              <p style="color: #94a3b8; font-size: 14px; margin-bottom: 25px;">Ubah kata sandi Anda secara berkala untuk menjaga keamanan akun.</p>
+              <p style="color: #94a3b8; font-size: 14px; margin-bottom: 25px;">Change your password regularly to keep your account secure.</p>
 
               <form class="settings-form" action="?tab=password" method="POST">
                   <div class="form-group">
                       <label>Old Password<span class="text-red">*</span></label>
-                      <input type="password" name="old_password" required placeholder="Masukkan sandi saat ini">
+                      <input type="password" name="old_password" required placeholder="Enter current password">
                   </div>
                   
                   <div class="form-group" style="margin-top: 10px;">
                       <label>New Password<span class="text-red">*</span></label>
-                      <input type="password" name="new_password" required placeholder="Sandi baru (min. 6 karakter)">
+                      <input type="password" name="new_password" required placeholder="New password (min. 6 characters)">
                   </div>
                   
                   <div class="form-group">
                       <label>Confirm New Password<span class="text-red">*</span></label>
-                      <input type="password" name="confirm_password" required placeholder="Ulangi sandi baru">
+                      <input type="password" name="confirm_password" required placeholder="Repeat new password">
                   </div>
 
                   <div class="form-actions" style="margin-top: 20px;">

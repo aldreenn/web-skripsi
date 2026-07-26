@@ -318,6 +318,7 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | ReadQuest</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -336,7 +337,7 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
         </div>
 
         <ul class="navbar-center navbar-links">
-            <li><a href="#home" onclick="switchPage('home')">Home</a></li>
+            <li><a href="/pages/dashboard.php" onclick="switchPage('dashboard'); return false;">Dashboard</a></li>
             <li><a href="/pages/practice.php">Practice</a></li>
             <li><a href="/pages/test.php">Test</a></li>
             <li><a href="#leaderboard" onclick="switchPage('leaderboard')">Leaderboard</a></li>
@@ -806,10 +807,10 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                     ?>
                 </p>
                 
-                <form class="leaderboard-filter-form" method="GET" action="dashboard.php" style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; align-items: center;">
-                    <input type="text" name="search" placeholder="Search competitor's name..." value="<?= $search; ?>" style="flex-grow: 1; padding: 12px 15px; border: 1px solid #334155; border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; background-color: #0f172a; color: white;">
+                <form class="leaderboard-filter-form" style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; align-items: center;" onsubmit="return false;">
+                    <input type="text" id="lb-search" name="search" placeholder="Search competitor's name..." value="<?= htmlspecialchars($search); ?>" style="flex-grow: 1; padding: 12px 15px; border: 1px solid #334155; border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; background-color: #0f172a; color: white;" oninput="debounceFetchLeaderboard()">
                     
-                    <select name="level_filter" style="padding: 12px 15px; border: 1px solid #334155; border-radius: 8px; font-size: 14px; outline: none; background: #0f172a; color: white; font-family: inherit;">
+                    <select id="lb-level" name="level_filter" style="padding: 12px 15px; border: 1px solid #334155; border-radius: 8px; font-size: 14px; outline: none; background: #0f172a; color: white; font-family: inherit;" onchange="fetchLeaderboard()">
                         <option value="">🏆 All Leagues (Global)</option>
                         <option value="A1" <?= ($level_filter == 'A1') ? 'selected' : ''; ?>>📚 A1 League</option>
                         <option value="A2" <?= ($level_filter == 'A2') ? 'selected' : ''; ?>>📘 A2 League</option>
@@ -818,25 +819,19 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                         <option value="C1" <?= ($level_filter == 'C1') ? 'selected' : ''; ?>>🌟 C1 League</option>
                         <option value="C2" <?= ($level_filter == 'C2') ? 'selected' : ''; ?>>👑 C2 League</option>
                     </select>
-                    
-                    <button type="submit" class="btn-primary" style="padding: 12px 24px; margin: 0;">Search</button>
-                    
-                    <?php if ($search != '' || $level_filter != ''): ?>
-                        <a href="dashboard.php#leaderboard" class="btn-primary" style="padding: 12px 24px; margin: 0; background-color: transparent; border: 1px solid #334155; color: #e2e8f0; text-decoration:none; text-align: center;">Reset</a>
-                    <?php endif; ?>
                 </form>
                 
                 <div style="overflow-x: auto;">
-                    <table class="leaderboard-table">
+                    <table class="leaderboard-table" style="table-layout: fixed; width: 100%;">
                         <thead>
                             <tr>
                                 <th style="width: 80px; text-align: center;">Rank</th>
-                                <th style="text-align: left;">Participant Name</th>
-                                <th class="hide-mobile" style="text-align: center;">Articles Passed</th>
-                                <th style="text-align: right;">Total Score (XP)</th>
+                                <th style="text-align: left; padding-right: 20px;">Participant Name</th>
+                                <th class="hide-mobile" style="width: 150px; text-align: center; white-space: nowrap;">Articles Passed</th>
+                                <th style="width: 160px; text-align: right; white-space: nowrap;">Total Score (XP)</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="leaderboard-tbody">
                             <?php 
                             $rank = 1;
                             if (mysqli_num_rows($leaderboard_result) > 0) {
@@ -878,6 +873,57 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                         </tbody>
                     </table>
                 </div>
+                
+                <script>
+                    let lbTimer;
+                    function debounceFetchLeaderboard() {
+                        clearTimeout(lbTimer);
+                        lbTimer = setTimeout(() => fetchLeaderboard(), 400);
+                    }
+                    
+                    function fetchLeaderboard() {
+                        const search = document.getElementById('lb-search').value;
+                        const level = document.getElementById('lb-level').value;
+                        const tbody = document.getElementById('leaderboard-tbody');
+                        
+                        let skeletonHTML = '';
+                        for(let i=0; i<5; i++) {
+                            skeletonHTML += `
+                                <tr class="skeleton-row">
+                                    <td style="text-align: center;"><div class="skeleton-box" style="width: 40px; margin: 0 auto; border-radius: 50%; height: 40px;"></div></td>
+                                    <td><div class="skeleton-box" style="width: 70%;"></div></td>
+                                    <td class="hide-mobile" style="text-align: center;"><div class="skeleton-box" style="width: 30px; margin: 0 auto;"></div></td>
+                                    <td style="text-align: right;"><div class="skeleton-box" style="width: 80px; margin-left: auto;"></div></td>
+                                </tr>
+                            `;
+                        }
+                        tbody.innerHTML = skeletonHTML;
+                        
+                        // Update URL parameter tanpa refresh untuk maintain state jika di-refresh manual
+                        const newUrl = new URL(window.location);
+                        if (search) newUrl.searchParams.set('search', search);
+                        else newUrl.searchParams.delete('search');
+                        
+                        if (level) newUrl.searchParams.set('level_filter', level);
+                        else newUrl.searchParams.delete('level_filter');
+                        
+                        window.history.replaceState(null, null, newUrl);
+                        
+                        fetch('dashboard.php?search=' + encodeURIComponent(search) + '&level_filter=' + encodeURIComponent(level))
+                            .then(response => response.text())
+                            .then(html => {
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                const newTbody = doc.querySelector('#leaderboard-tbody');
+                                if (newTbody) {
+                                    tbody.innerHTML = newTbody.innerHTML;
+                                }
+                            })
+                            .catch(err => {
+                                console.error('Error fetching leaderboard', err);
+                            });
+                    }
+                </script>
             </div>
         </div>
     </main>
@@ -1177,9 +1223,10 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
             const homePage = document.getElementById('page-home');
             const leaderboardPage = document.getElementById('page-leaderboard');
             
-            if (pageName === 'home') {
+            if (pageName === 'dashboard' || pageName === 'home') {
                 homePage.style.display = 'block';
                 leaderboardPage.style.display = 'none';
+                pageName = 'dashboard';
             } else if (pageName === 'leaderboard') {
                 homePage.style.display = 'none';
                 leaderboardPage.style.display = 'block';
@@ -1187,8 +1234,16 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
 
             localStorage.setItem('lastPage', pageName);
             
-            if (window.location.hash !== '#' + pageName) {
+            if (pageName === 'dashboard') {
+                history.pushState(null, null, window.location.pathname + window.location.search);
+            } else if (window.location.hash !== '#' + pageName) {
                 history.pushState(null, null, '#' + pageName);
+            }
+            
+            // Tutup menu burger HP jika terbuka
+            var mobileMenu = document.querySelector(".navbar-links");
+            if (mobileMenu && mobileMenu.classList.contains('show')) {
+                mobileMenu.classList.remove('show');
             }
         }
 
