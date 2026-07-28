@@ -39,11 +39,13 @@ if ($query_master) {
         // Deskripsi default
         $desc = "Exam simulation to measure your reading proficiency.";
         if ($pkt_code === 'A') {
-             $desc = 'First stage exam simulation to comprehensively measure your basic reading skills. The timer will run continuously.';
+             $desc = 'The baseline assessment. Begin your simulation journey to establish your initial score and identify your strengths across all CEFR levels.';
         } elseif ($pkt_code === 'B') {
-             $desc = 'Intermediate difficulty level. Unlocks after you complete Test Package A.';
+             $desc = 'The consistency check. Apply what you\'ve learned from your practice sessions and see how much your reading comprehension has improved. Unlocks after Test Package A.';
         } elseif ($pkt_code === 'C') {
-             $desc = 'Final stage exam simulation (Final Boss). Unlocks after you complete Test Package B.';
+             $desc = 'The mastery phase. Fine-tune your time management and accuracy under pressure with this full-scale simulation. Unlocks after Test Package B.';
+        } elseif ($pkt_code === 'D') {
+             $desc = 'The final milestone. Prove your ultimate readiness with this definitive exam simulation before facing the real test. Unlocks after Test Package C.';
         }
 
         $test_packets[$pkt_code] = [
@@ -175,7 +177,7 @@ $json_active_packet = json_encode($active_packet);
               
               if (data.locked) {
                   buttonClass += " locked";
-                  clickAction = `onclick="alert('${data.req_msg}')"`;
+                  clickAction = `onclick="showLockedModal('${data.req_msg}')"`;
                   lockIcon = `<span class="material-symbols-outlined icon" style="font-size: 18px; vertical-align: middle; margin-right: 6px;">lock</span>`;
               }
 
@@ -271,6 +273,25 @@ $json_active_packet = json_encode($active_packet);
               sidebar.classList.toggle("show");
           }
       }
+
+      function showLockedModal(msg) {
+          document.getElementById('modalMessage').innerText = msg;
+          document.getElementById('customModal').classList.add('show');
+      }
+
+      function closeLockedModal() {
+          document.getElementById('customModal').classList.remove('show');
+      }
     </script>
+    
+    <div id="customModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="modalTitle" class="modal-title">Package Locked</h3>
+            <p id="modalMessage" class="modal-message"></p>
+            <div class="modal-actions">
+                <button class="btn-confirm-modal" onclick="closeLockedModal()">OK</button>
+            </div>
+        </div>
+    </div>
   </body>
 </html>

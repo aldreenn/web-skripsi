@@ -565,8 +565,9 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                     <div class="card-panel performance-graph-panel" id="performance-graph-panel" style="margin-top: 25px;">
                         <div class="panel-header" style="border-bottom: none; padding-bottom: 0;">
                             <h3 style="display:flex; align-items:center; gap:8px;">
-                                <span class="material-symbols-outlined" style="color: #a3e635;">monitoring</span>
-                                Performance Graph <span style="color: #a3e635;">Level <span id="display-graph-level"><?= htmlspecialchars($active_level) ?></span></span>
+                                <span class="material-symbols-outlined" style="color: #a3e635;" id="graph-icon">monitoring</span>
+                                <span id="graph-title-text">Performance Graph</span> 
+                                <span style="color: #a3e635;" id="graph-subtitle">Level <span id="display-graph-level"><?= htmlspecialchars($active_level) ?></span></span>
                             </h3>
                         </div>
                         
@@ -610,10 +611,10 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                             <p id="empty-test-msg" style="color: #94a3b8; text-align: center; margin: auto; padding-top: 50px; display: <?= empty($graph_test) ? 'block' : 'none' ?>;">No test data to display.</p>
                             <div class="line-chart-container" id="line-chart-test" style="display: <?= empty($graph_test) ? 'none' : 'flex' ?>;">
                                 <div class="y-axis">
-                                    <span>100</span>
-                                    <span>75</span>
+                                    <span>67</span>
                                     <span>50</span>
-                                    <span>25</span>
+                                    <span>40</span>
+                                    <span>31</span>
                                     <span>0</span>
                                 </div>
                                 <div class="chart-content">
@@ -628,12 +629,12 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
                                         <svg class="chart-svg" preserveAspectRatio="none" id="svg-test">
                                             <defs>
                                                 <linearGradient id="gradient-test" x1="0" x2="0" y1="0" y2="1">
-                                                    <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/>
-                                                    <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+                                                    <stop offset="0%" stop-color="#a3e635" stop-opacity="0.3"/>
+                                                    <stop offset="100%" stop-color="#a3e635" stop-opacity="0"/>
                                                 </linearGradient>
                                             </defs>
                                             <path class="chart-area-path" fill="url(#gradient-test)" d=""></path>
-                                            <path class="chart-line-path" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d=""></path>
+                                            <path class="chart-line-path" fill="none" stroke="#a3e635" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d=""></path>
                                         </svg>
                                         <div class="data-points-container" id="points-test"></div>
                                     </div>
@@ -1108,7 +1109,8 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
 
             chartData.forEach((item, index) => {
                 let realScore = parseFloat(item.score);
-                let score = isTest ? Math.min(100, Math.max(0, (realScore / 677) * 100)) : realScore;
+                // Untuk Test Path, skor maksimal ITP Reading adalah 67
+                let score = isTest ? Math.min(100, Math.max(0, (realScore / 67) * 100)) : realScore;
                 
                 let x = paddingX + (index * stepX);
                 lastX = x;
@@ -1127,8 +1129,8 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
 
                 let leftPercent = (data.length === 1) ? 50 : (x / svgWidth) * 100;
                 let bottomPercent = (score / 100) * 100;
-                let colorClass = isTest ? 'test' : 'practice';
-                let colorHex = isTest ? '#3b82f6' : '#a3e635';
+                let colorClass = 'practice'; // Selalu gunakan warna hijau
+                let colorHex = '#a3e635'; // Selalu gunakan warna hijau
 
                 pointsContainer.innerHTML += `
                     <div class="data-point ${colorClass}" style="left: ${leftPercent}%; bottom: ${bottomPercent}%;">
@@ -1193,16 +1195,23 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
             
             // Sembunyikan/Tampilkan keseluruhan panel grafik performa
             if(document.getElementById('performance-graph-panel')) {
+                document.getElementById('performance-graph-panel').style.display = 'block';
+                
+                // Ubah judul teks
+                const graphIcon = document.getElementById('graph-icon');
+                const graphSubtitle = document.getElementById('graph-subtitle');
                 if (pathType === 'test') {
-                    document.getElementById('performance-graph-panel').style.display = 'none';
+                    graphSubtitle.innerHTML = 'Test';
                 } else {
-                    document.getElementById('performance-graph-panel').style.display = 'block';
+                    graphSubtitle.innerHTML = `Level <span id="display-graph-level">${activeLevel}</span>`;
                 }
             }
 
-            // Sembunyikan graph
+            // Sembunyikan semua graph container terlebih dahulu
             if(document.getElementById('graph-container-practice')) {
                 document.getElementById('graph-container-practice').style.display = 'none';
+            }
+            if(document.getElementById('graph-container-test')) {
                 document.getElementById('graph-container-test').style.display = 'none';
             }
 
@@ -1213,7 +1222,7 @@ $leaderboard_result = mysqli_query($conn, $leaderboard_query);
             document.getElementById('sidebar-' + pathType + '-stats').style.display = 'block';
             document.getElementById('sidebar-' + pathType + '-feed').style.display = 'block';
 
-            if(document.getElementById('graph-container-' + pathType) && pathType !== 'test') {
+            if(document.getElementById('graph-container-' + pathType)) {
                 document.getElementById('graph-container-' + pathType).style.display = 'block';
                 drawAllGraphs();
             }

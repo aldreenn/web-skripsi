@@ -22,9 +22,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'reset') {
 
 $success_msg = '';
 $error_msg = '';
+if (isset($_SESSION['success_msg'])) {
+    $success_msg = $_SESSION['success_msg'];
+    unset($_SESSION['success_msg']);
+}
+if (isset($_SESSION['error_msg'])) {
+    $error_msg = $_SESSION['error_msg'];
+    unset($_SESSION['error_msg']);
+}
 
 // Menentukan tab mana yang sedang aktif (default: details)
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'details';
+
+if (isset($_GET['reset_success'])) {
+    $success_msg = "Your practice progress has been successfully reset!";
+}
 
 // ========================================================
 // 1. PROSES UPDATE DATA JIKA TOMBOL SAVE DIKLIK
@@ -35,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $new_bio = trim($_POST['bio']);
 
     if (empty($new_fn) || empty($new_ln)) {
-        $error_msg = "First Name dan Last Name tidak boleh kosong.";
+        $_SESSION['error_msg'] = "First Name and Last Name cannot be empty.";
     } else {
         // Rapikan format nama (Huruf Kapital di awal)
         $new_fn = ucwords(strtolower($new_fn));
@@ -47,15 +59,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         mysqli_stmt_bind_param($stmt, "sssi", $new_fn, $new_ln, $new_bio, $user_id);
         
         if (mysqli_stmt_execute($stmt)) {
-            $success_msg = "Profil Anda berhasil diperbarui!";
+            $_SESSION['success_msg'] = "Your profile has been successfully updated!";
             // Update session agar nama di navbar langsung berubah
             $_SESSION['first_name'] = $new_fn;
             $_SESSION['last_name'] = $new_ln;
         } else {
-            $error_msg = "Terjadi kesalahan saat menyimpan data.";
+            $_SESSION['error_msg'] = "An error occurred while saving your data.";
         }
         mysqli_stmt_close($stmt);
     }
+    header("Location: manage_account.php?tab=details");
+    exit;
 }
 
 // ========================================================
@@ -67,11 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_password'])) {
     $confirm_password = $_POST['confirm_password'];
 
     if (empty($old_password) || empty($new_password) || empty($confirm_password)) {
-        $error_msg = "Semua kolom password wajib diisi.";
+        $_SESSION['error_msg'] = "All password fields are required.";
     } elseif ($new_password !== $confirm_password) {
-        $error_msg = "Konfirmasi password baru tidak cocok.";
+        $_SESSION['error_msg'] = "New password confirmation does not match.";
     } elseif (strlen($new_password) < 6) {
-        $error_msg = "Password baru minimal harus 6 karakter.";
+        $_SESSION['error_msg'] = "New password must be at least 6 characters.";
+    } elseif ($new_password === $old_password) {
+        $_SESSION['error_msg'] = "New password cannot be the same as the old password.";
     } else {
         // Ambil password lama dari database untuk dicocokkan
         $pass_query = "SELECT password FROM users WHERE id = '$user_id'";
@@ -87,15 +103,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_password'])) {
             mysqli_stmt_bind_param($stmt_pass, "si", $new_hashed, $user_id);
             
             if (mysqli_stmt_execute($stmt_pass)) {
-                $success_msg = "Kata sandi Anda berhasil diubah!";
+                $_SESSION['success_msg'] = "Your password has been successfully changed!";
             } else {
-                $error_msg = "Terjadi kesalahan sistem saat mengubah sandi.";
+                $_SESSION['error_msg'] = "A system error occurred while changing your password.";
             }
             mysqli_stmt_close($stmt_pass);
         } else {
-            $error_msg = "Password lama yang Anda masukkan salah.";
+            $_SESSION['error_msg'] = "The old password you entered is incorrect.";
         }
     }
+    header("Location: manage_account.php?tab=password");
+    exit;
 }
 
 // ========================================================
@@ -318,17 +336,26 @@ if ($has_paket_a) {
               <form class="settings-form" action="?tab=password" method="POST">
                   <div class="form-group">
                       <label>Old Password<span class="text-red">*</span></label>
-                      <input type="password" name="old_password" required placeholder="Enter current password">
+                      <div style="position: relative; display: flex; align-items: center;">
+                          <input type="password" id="old_password" name="old_password" required placeholder="Enter current password">
+                          <span class="material-symbols-outlined toggle-password" data-target="old_password" style="position: absolute; right: 15px; color: #94a3b8; cursor: pointer; user-select: none;">visibility_off</span>
+                      </div>
                   </div>
                   
                   <div class="form-group" style="margin-top: 10px;">
                       <label>New Password<span class="text-red">*</span></label>
-                      <input type="password" name="new_password" required placeholder="New password (min. 6 characters)">
+                      <div style="position: relative; display: flex; align-items: center;">
+                          <input type="password" id="new_password" name="new_password" required placeholder="New password (min. 6 characters)">
+                          <span class="material-symbols-outlined toggle-password" data-target="new_password" style="position: absolute; right: 15px; color: #94a3b8; cursor: pointer; user-select: none;">visibility_off</span>
+                      </div>
                   </div>
                   
                   <div class="form-group">
                       <label>Confirm New Password<span class="text-red">*</span></label>
-                      <input type="password" name="confirm_password" required placeholder="Repeat new password">
+                      <div style="position: relative; display: flex; align-items: center;">
+                          <input type="password" id="confirm_password" name="confirm_password" required placeholder="Repeat new password">
+                          <span class="material-symbols-outlined toggle-password" data-target="confirm_password" style="position: absolute; right: 15px; color: #94a3b8; cursor: pointer; user-select: none;">visibility_off</span>
+                      </div>
                   </div>
 
                   <div class="form-actions" style="margin-top: 20px;">
@@ -419,6 +446,37 @@ if ($has_paket_a) {
         setTimeout(() => { modal.classList.add('show'); }, 50);
     });
     <?php endif; ?>
+
+    // Toggle Password Visibility Logic
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        // Cek isi awal saat pertama dimuat
+        const targetId = icon.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        
+        if(input) {
+            // Tampilkan icon hanya jika ada isinya
+            const toggleVisibility = () => {
+                icon.style.display = input.value.length > 0 ? "block" : "none";
+            };
+            
+            toggleVisibility();
+            input.addEventListener("input", toggleVisibility);
+
+            icon.addEventListener('click', function() {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+            });
+            
+            // Hover effect on icon
+            icon.addEventListener('mouseover', function() {
+                this.style.color = '#cbd5e1';
+            });
+            icon.addEventListener('mouseout', function() {
+                this.style.color = '#94a3b8';
+            });
+        }
+    });
   </script>
 </body>
 </html>

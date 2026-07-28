@@ -79,7 +79,7 @@ $badge_label = isset($cefr_labels[$cefr_level]) ? $cefr_labels[$cefr_level] : $c
                     <div class="stats-value" style="color: #22c55e;"><?php echo $raw_score; ?> <span style="font-size: 12px; color: #64748b;">Questions</span></div>
                 </div>
                 <div class="stats-box">
-                    <div class="stats-label">Wrong / Empty</div>
+                    <div class="stats-label">Wrong Answer</div>
                     <div class="stats-value" style="color: #ef4444;"><?php echo $wrong_score; ?> <span style="font-size: 12px; color: #64748b;">Questions</span></div>
                 </div>
             </div>

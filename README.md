@@ -15,7 +15,7 @@ aplikasi_skripsi/
 ├── 403.php                   # Halaman error akses ditolak
 │
 ├── config/
-│   └── koneksi.php           # Konfigurasi koneksi database MySQL
+│   └── koneksi.php           # Konfigurasi koneksi database MySQL + Timezone Sync
 │
 ├── auth/
 │   ├── login.php             # Logika proses login
@@ -78,7 +78,7 @@ aplikasi_skripsi/
 │   ├── score_history.css     # CSS Riwayat Nilai
 │   └── manage_account.css    # CSS Pengaturan Akun
 │
-├── assets/                   # Gambar statis (hero image, SVG background)
+├── assets/                   # Gambar statis (hero image, SVG background, favicon)
 ├── data/
 │   └── reading-repository.js # Repository data bacaan (JavaScript)
 └── uploads/
@@ -113,6 +113,8 @@ aplikasi_skripsi/
 - **Stack**: PHP Native + MySQL (XAMPP), JavaScript Vanilla, TailwindCSS (khusus landing page), Vanilla CSS (semua halaman lainnya)
 - **Session Management**: PHP `$_SESSION` untuk autentikasi dan penyimpanan state user
 - **Database Driver**: `mysqli` (procedural dan OOP)
+- **Timezone Sync**: PHP `date_default_timezone_set('Asia/Jakarta')` + MySQL `SET time_zone = '+07:00'` pada setiap koneksi untuk sinkronisasi zona waktu WIB
+- **Favicon**: Custom favicon (`assets/favicon.png`) diterapkan di seluruh halaman (user & admin)
 
 ---
 
@@ -234,6 +236,9 @@ Panel utama menampilkan dua jalur pembelajaran yang bisa di-toggle:
   - **XP dihitung dari `SUM(score)`** di tabel `practice_scores`, di mana `score` adalah **Mastery Rate** (0–100%) per artikel. Bukan ITP Score.
   - Jika filter Level CEFR aktif, XP hanya dihitung dari artikel di level tersebut (`JOIN materials ... WHERE m.level = '...'`).
 - Fitur **Search** berdasarkan nama dan **Filter** berdasarkan Level CEFR (A1–C2).
+- **AJAX Live Reload**: Pencarian dan filter memuat data secara asinkron tanpa refresh halaman penuh. URL parameter (`search`, `level_filter`) diperbarui via `history.replaceState()` agar state tetap terjaga saat di-refresh manual.
+- **Skeleton Loading Animation**: Saat data sedang dimuat melalui AJAX, baris tabel digantikan oleh animasi *shimmer* (skeleton placeholder) agar user tidak melihat tabel yang kosong atau bingung.
+- **Responsif Mobile**: Kolom `Articles Passed` disembunyikan pada layar kecil (`hide-mobile` class) dan form filter Leaderboard menggunakan layout vertikal pada mobile. Header kolom menggunakan `white-space: nowrap` untuk mencegah pemotongan teks dan `table-layout: fixed` untuk stabilitas layout.
 - Baris user yang login di-highlight dengan warna khusus dan badge "(You)".
 - Peringkat top 3 mendapat emoji medali (🥇🥈🥉).
 - Tombol **Reset** untuk menghapus filter.
@@ -252,16 +257,17 @@ Panel utama menampilkan dua jalur pembelajaran yang bisa di-toggle:
 1. **Sidebar CEFR Level**: Menampilkan tombol per level (A1, A2, B1, B2, C1, C2) yang dirender secara dinamis dari data database.
 2. **Sistem Gembok Level**: 
    - Level A1 selalu terbuka.
-   - Level berikutnya terkunci sampai **SEMUA artikel di level sebelumnya telah LULUS** (skor ≥ 70).
+   - Level berikutnya terkunci sampai **minimal 5 artikel di level sebelumnya telah LULUS** (skor ≥ 70). Jumlah minimal dapat dikonfigurasi melalui variabel `minRequired` di JavaScript.
    - Jika level sebelumnya belum ada materinya di database → tetap terkunci.
-3. **Tampilan Folder Topik**: Setiap level menampilkan folder-folder topik (diambil dari tabel `topics`). Klik folder untuk melihat artikel di dalamnya.
-4. **Daftar Artikel**: Setiap kartu artikel menampilkan:
+3. **Custom Modal Pop-Up (Level Locked)**: Saat user mengklik level yang masih terkunci, muncul modal pop-up bergaya premium (glassmorphism, backdrop blur) dengan pesan persyaratan yang spesifik (misal: "Pass at least 5 article(s) in A2 to unlock this level."). Modal ini menggantikan `alert()` bawaan browser.
+4. **Tampilan Folder Topik**: Setiap level menampilkan folder-folder topik (diambil dari tabel `topics`). Klik folder untuk melihat artikel di dalamnya.
+5. **Daftar Artikel**: Setiap kartu artikel menampilkan:
    - Badge level CEFR
    - Status: **Passed** (hijau, skor ≥70), **Failed** (merah, skor <70), atau belum pernah dikerjakan.
    - Skor best attempt.
    - Tombol `Start Practice` atau `Try Again`.
-5. **Search**: Filter artikel berdasarkan judul secara real-time.
-6. **Progress Bar per Level**: Di sidebar, setiap level menampilkan bar progres kelulusan.
+6. **Search**: Filter artikel berdasarkan judul secara real-time.
+7. **Progress Bar per Level**: Di sidebar, setiap level menampilkan bar progres kelulusan.
 
 ---
 
@@ -323,9 +329,15 @@ Panel utama menampilkan dua jalur pembelajaran yang bisa di-toggle:
 | **File** | `pages/test.php` |
 | **CSS** | `desain/test.css` |
 
-- Menampilkan paket ujian dari tabel `test_packets`.
-- Setiap paket menampilkan: judul, deskripsi, durasi (55 menit), jumlah soal (50).
+- Menampilkan paket ujian dari tabel `test_packets` (saat ini mendukung **4 paket: A, B, C, D**).
+- Setiap paket menampilkan: judul, deskripsi naratif unik, durasi (**40 menit**), jumlah soal (**32 soal**: 8 soal per level CEFR A2–C1).
+- **Deskripsi Paket Naratif**: Setiap paket memiliki deskripsi unik yang menggambarkan fase perjalanan belajar:
+  - **Package A**: *"The baseline assessment"* — Penilaian awal.
+  - **Package B**: *"The consistency check"* — Uji konsistensi setelah latihan.
+  - **Package C**: *"The mastery phase"* — Fase penguasaan di bawah tekanan.
+  - **Package D**: *"The final milestone"* — Pencapaian akhir sebelum ujian sesungguhnya.
 - **Sistem Gembok**: Paket terkunci jika requirement belum terpenuhi.
+- **Custom Modal Pop-Up (Package Locked)**: Saat user mengklik paket yang masih terkunci, muncul modal pop-up bergaya premium (identik dengan Practice Path) menggantikan `alert()` bawaan browser. Pesan modal menyesuaikan secara dinamis (misal: "Please complete Package B first to unlock this test").
 - **Tombol Completed**: Jika user sudah mengerjakan, tombol dinonaktifkan (ujian hanya bisa dilakukan 1x per paket).
 
 ### 6.2 Halaman Ujian Simulasi
@@ -337,7 +349,7 @@ Panel utama menampilkan dua jalur pembelajaran yang bisa di-toggle:
 
 **Cara Kerja:**
 1. **Server-Side Timer**: Waktu ujian disimpan di `$_SESSION['exam_end_time_X']`. Sisa waktu dihitung di server (`$_SESSION[timer] - time()`), sehingga refresh halaman **tidak mereset timer**.
-2. **Timer Countdown 55 Menit**: Ditampilkan di header dan terus berjalan. Jika habis → form otomatis di-submit.
+2. **Timer Countdown 40 Menit**: Ditampilkan di header dan terus berjalan. Jika habis → form otomatis di-submit.
 3. **Multi-Passage Layout**: Panel kiri menampilkan teks bacaan dengan tab untuk berpindah antar passage. Panel kanan menampilkan soal.
 4. **Reciprocal Reading 4 Phases**: Setiap passage memiliki 4 tahap soal yang harus dilalui berurutan:
    - **Predicting** → **Clarifying** → **Questioning** → **Summarizing**
@@ -355,7 +367,7 @@ Panel utama menampilkan dua jalur pembelajaran yang bisa di-toggle:
 **Cara Kerja:**
 1. Kunci jawaban diambil dari database bersama `cefr_level` setiap soal (`test_questions.correct_answer`, `test_questions.cefr_level`).
 2. Setiap jawaban user dicocokkan dengan kunci jawaban secara server-side.
-3. **Raw Score** dihitung (jumlah jawaban benar dari 50 soal).
+3. **Raw Score** dihitung (jumlah jawaban benar dari 32 soal).
 4. **Konversi ke Skor TOEFL ITP Reading + Predikat CEFR**: Menggunakan fungsi `convertRawToITP()` dengan **Range-Based Linear Interpolation**:
 
    | Raw Score | Rentang Skor ITP | Level CEFR |
@@ -366,7 +378,7 @@ Panel utama menampilkan dua jalur pembelajaran yang bisa di-toggle:
    | 0 – 22  | 31 – 47 | A2 (Basic) |
 
    - Rumus: `itp_score = itp_min + ((raw - raw_min) / (raw_max - raw_min)) × (itp_max - itp_min)`
-   - Jika jumlah soal kurang dari 50 (saat testing), raw score diproyeksikan ke skala 50 secara proporsional.
+   - Jika jumlah soal berbeda dari 50 (default), raw score diproyeksikan ke skala 50 secara proporsional untuk memastikan tabel konversi ITP tetap akurat.
 5. **Analisis Diagnostik (Diagnostic Report)**: Bersamaan dengan pemeriksaan jawaban, sistem menghitung breakdown persentase jawaban benar **per level CEFR** (A2, B1, B2, C1) berdasarkan tag `cefr_level` pada setiap soal.
 6. Hasil disimpan ke tabel `test_scores` (termasuk kolom `cefr_level`).
 7. Session timer dihapus.
@@ -731,7 +743,7 @@ itpScore = itp_min + ratio × (itp_max - itp_min)
 
 ### B. Scoring Modul Test (Ujian Simulasi Paket A–D)
 
-Setiap paket berisi **50 soal pilihan ganda campuran** (level A2–C1). Scoring menggunakan konversi langsung dari raw score ke skor ITP dan predikat CEFR.
+Setiap paket berisi **32 soal pilihan ganda campuran** (8 soal per level CEFR: A2, B1, B2, C1). Scoring menggunakan konversi dari raw score ke skor ITP dan predikat CEFR, dengan raw score diproyeksikan ke skala 50 untuk memastikan konsistensi tabel konversi.
 
 **Fungsi**: `convertRawToITP($raw)` — PHP, server-side.
 
@@ -855,7 +867,20 @@ Setiap soal ujian (tabel `test_questions`) memiliki tag `cefr_level` (A2/B1/B2/C
 | **Cache Prevention** | Header anti-cache setelah login/logout (`no-store, no-cache`) |
 | **Anti-Repeat Exam** | Double protection: client-side (tombol disabled) + server-side (cek database sebelum render soal) |
 | **Server-Side Timer** | Timer ujian disimpan di session, tidak bisa dimanipulasi via browser |
+| **Timezone Sync** | PHP + MySQL timezone disinkronkan ke WIB (`Asia/Jakarta` / `+07:00`) pada setiap koneksi untuk memastikan akurasi waktu pada tabel `TIMESTAMP` |
 
 ---
 
-> 📌 **Catatan**: Dokumen ini terakhir diperbarui berdasarkan analisis kode sumber pada `16 Juli 2026`. Perubahan terakhir meliputi refactor sistem scoring — penambahan detail flag `hasItp`, klarifikasi XP vs ITP Score, penambahan kolom ITP Score di Score History, logika `created_at` refresh di `save_score.php`, threshold Perfect Streak (≥2), CEFR Badge gamifikasi di profil dropdown, dan klarifikasi kalkulasi XP Leaderboard.
+> 📌 **Catatan**: Dokumen ini terakhir diperbarui berdasarkan analisis kode sumber pada `28 Juli 2026`. Perubahan terbaru meliputi:
+> - **Favicon**: Penambahan custom favicon (`assets/favicon.png`) di seluruh halaman (user + admin).
+> - **Timezone Sync**: Sinkronisasi zona waktu PHP (`Asia/Jakarta`) dan MySQL (`+07:00`) pada `koneksi.php` untuk memperbaiki selisih waktu 14 jam pada server hosting InfinityFree.
+> - **Leaderboard AJAX + Skeleton Loading**: Pencarian dan filter leaderboard menggunakan Fetch API dengan animasi skeleton shimmer sebagai placeholder saat memuat data.
+> - **Leaderboard Responsif Mobile**: Kolom `Articles Passed` disembunyikan di mobile, layout filter vertikal, header kolom `white-space: nowrap`, dan `table-layout: fixed`.
+> - **Custom Modal Pop-Up (Test Path)**: `alert()` bawaan browser pada paket ujian terkunci diganti dengan modal pop-up bergaya premium (glassmorphism + backdrop blur), identik dengan Practice Path.
+> - **Deskripsi Paket Test A–D**: Deskripsi setiap paket diubah menjadi narasi progresif (baseline → consistency → mastery → final milestone) karena semua paket memiliki komposisi soal yang sama (8 soal × 4 level CEFR = 32 soal).
+> - **Koreksi Spesifikasi Ujian**: Durasi ujian dikoreksi dari 55 menit menjadi **40 menit**, jumlah soal dari 50 menjadi **32 soal** per paket.
+> - **Encoding Bug Fix**: Penambahan `mysqli_set_charset($conn, "utf8mb4")` pada `config/koneksi.php` untuk memperbaiki kemunculan simbol tanda tanya () pada teks bacaan akibat masalah *character encoding*.
+> - **UI Test Result**: Penghapusan kata "Empty" pada keterangan hasil ujian "Wrong / Empty" karena sistem telah dirancang sedemikian rupa agar form soal ujian tidak bisa di-submit apabila ada jawaban kosong.
+> - **Performance Graph (Test Path)**: Penambahan visualisasi grafik Line Chart interaktif untuk melacak tren performa (skala ITP maks 67) dari riwayat setiap Paket Ujian (Test) yang telah diselesaikan pada Dashboard pengguna.
+> - **Form Resubmission Fix (PRG Pattern)**: Penerapan pola arsitektur *Post/Redirect/Get* pada halaman `manage_account.php` untuk mencegah munculnya *popup* peringatan *Confirm Form Resubmission* dari browser ketika pengguna menekan F5/Refresh.
+> - **Password Validation & Visibility Toggle**: Penambahan validasi untuk menolak *password* baru jika sama dengan *password* lama, melengkapi form dengan fitur ikon mata (*show/hide password*) pada `manage_account.php` dan `signup.html`, serta standardisasi terjemahan pesan *error/success* ke dalam Bahasa Inggris secara utuh.

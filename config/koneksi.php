@@ -21,6 +21,9 @@ if (!$conn) {
     // Sinkronisasi zona waktu MySQL dengan zona waktu PHP (WIB)
     mysqli_query($conn, "SET time_zone = '+07:00'");
     
+    // Sinkronisasi encoding karakter ke UTF-8 agar karakter khusus (—, ", dll.) tampil benar
+    mysqli_set_charset($conn, "utf8mb4");
+    
     // Baris ini sengaja dikosongkan agar tidak mengganggu tampilan UI.
     // Jika ingin mengetes, Anda bisa menghapus tanda // di bawah ini:
     // echo "Koneksi Berhasil!";
